@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>慢病用药小管家</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --teal:#0F9B77;--tl:#E0F5EE;--tm:#5DCAA5;--td:#085041;
+  --amber:#D97706;--al:#FEF3C7;
+  --red:#DC2626;--rl:#FEE2E2;
+  --blue:#1D6FB4;--bl:#DBEAFE;
+  --mt:#FF6200;--mtl:#FFF0E8;
+  --bg:#F2F4F7;--card:#fff;--text:#1A1A2E;--muted:#7B8294;--border:#E4E7EF;
+  --r:14px;--sh:0 2px 10px rgba(0,0,0,.055);
+}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;overflow-x:hidden}
+
+/* Header */
+.hdr{background:var(--card);padding:15px 15px 0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.04)}
+.htop{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.htitle{font-size:16px;font-weight:700;color:var(--td)}
+.hright{display:flex;align-items:center;gap:7px}
+.hbuy-btn{display:flex;align-items:center;gap:4px;padding:5px 10px;background:var(--mtl);border:1px solid #FFB899;border-radius:20px;font-size:11px;font-weight:500;color:var(--mt);cursor:pointer;transition:all .2s}
+.hbuy-btn:active{opacity:.8}
+.hav{width:30px;height:30px;border-radius:50%;background:var(--tl);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--teal)}
+.tabs{display:flex}
+.tb{flex:1;padding:8px 0;font-size:10.5px;font-weight:400;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:inherit;white-space:nowrap}
+.tb.on{color:var(--teal);font-weight:600;border-bottom-color:var(--teal)}
+
+.content{padding:12px 12px 84px}
+.tc{display:none;animation:fi .2s ease}
+.tc.on{display:block}
+@keyframes fi{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.slabel{font-size:10px;font-weight:500;color:var(--muted);margin:13px 0 6px;letter-spacing:.9px;text-transform:uppercase}
+
+/* Hero */
+.hero{background:linear-gradient(140deg,#064032 0%,#0F9B77 100%);border-radius:var(--r);padding:16px 16px 18px;margin-bottom:10px;color:#fff;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-20px;top:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.07)}
+.hero::after{content:'';position:absolute;right:22px;bottom:-26px;width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.05)}
+.hdate{font-size:11px;opacity:.75;margin-bottom:3px}
+.hgreet{font-size:16px;font-weight:700;margin-bottom:14px}
+.hprog{display:flex;align-items:center;gap:12px}
+.pcircle{width:58px;height:58px;position:relative;flex-shrink:0}
+.pcircle svg{width:58px;height:58px;transform:rotate(-90deg)}
+.pr-bg{fill:none;stroke:rgba(255,255,255,.18);stroke-width:5}
+.pr-fg{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .9s cubic-bezier(.4,0,.2,1)}
+.pnum{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:700;color:#fff}
+.hstats{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.hst{text-align:center;background:rgba(255,255,255,.11);border-radius:8px;padding:5px 2px}
+.hst-n{font-size:17px;font-weight:700}
+.hst-l{font-size:9px;opacity:.78;margin-top:1px}
+
+/* Insight row */
+.irow{display:flex;gap:7px;margin-bottom:10px}
+.ic{flex:1;background:var(--card);border-radius:11px;padding:10px;box-shadow:var(--sh);border:1px solid var(--border);cursor:pointer;transition:border-color .2s}
+.ic:active{border-color:var(--teal)}
+.ic-lbl{font-size:9px;color:var(--muted);margin-bottom:3px}
+.ic-val{font-size:16px;font-weight:700}
+.ic-chip{display:inline-block;padding:1px 5px;border-radius:7px;font-size:9px;font-weight:500;margin-top:3px}
+.ic-chip.ok{background:var(--tl);color:var(--td)}
+.ic-chip.warn{background:var(--al);color:#92400E}
+.ic-chip.hi{background:var(--rl);color:#991B1B}
+
+/* Flow */
+.flow{background:var(--card);border-radius:var(--r);padding:11px 13px 13px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.fl-title{font-size:11px;font-weight:500;color:var(--muted);margin-bottom:11px}
+.fl-steps{display:flex;align-items:center}
+.fl-step{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.fc{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.fc.done{background:var(--tl)}
+.fc.curr{background:var(--teal);box-shadow:0 0 0 4px rgba(15,155,119,.15)}
+.fc.pend{background:#F0F1F5}
+.fl-lbl{font-size:9px;color:var(--muted);text-align:center;line-height:1.3}
+.fl-step.cs .fl-lbl{color:var(--teal);font-weight:500}
+.fl-line{flex:1;height:1px;background:var(--border);margin:0 1px;margin-bottom:14px}
+.fl-line.d{background:var(--tm)}
+
+/* Alert */
+.al{border-radius:10px;padding:9px 11px;margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.al.warn{background:#FFFBEB;border:1px solid #FDE68A}
+.al.info{background:#EFF6FF;border:1px solid #BFDBFE}
+.al.danger{background:#FEF2F2;border:1px solid #FCA5A5}
+.al.success{background:var(--tl);border:1px solid var(--tm)}
+.al.mtc{background:var(--mtl);border:1px solid #FFB899}
+.al-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.al.warn .al-dot{background:var(--amber)}
+.al.info .al-dot{background:var(--blue)}
+.al.danger .al-dot{background:var(--red)}
+.al.success .al-dot{background:var(--teal)}
+.al.mtc .al-dot{background:var(--mt)}
+.al-body{flex:1;font-size:12px}
+.al-body strong{display:block;font-weight:500;margin-bottom:1px}
+.al-body small{font-size:10px;color:var(--muted)}
+.al.success .al-body small{color:var(--td)}
+.al-btn{font-size:10px;font-weight:500;color:var(--teal);cursor:pointer;white-space:nowrap}
+.al-btn.mt{color:var(--mt)}
+
+/* Med rows — TODAY TAB */
+.tslot{margin-bottom:12px}
+.sh{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.stag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
+.stag.am{background:#FEF3C7;color:#92400E}
+.stag.noon{background:#DBEAFE;color:#1E40AF}
+.stag.pm{background:#EDE9FE;color:#5B21B6}
+.stime{font-size:10px;color:var(--muted)}
+.mrow{background:var(--card);border-radius:10px;padding:9px 10px;margin-bottom:5px;display:flex;align-items:center;gap:9px;box-shadow:0 1px 3px rgba(0,0,0,.04);border:1px solid var(--border);transition:all .25s}
+.mrow.taken{opacity:.45;background:#FAFAFA}
+.mrow.missed{border-color:#FCA5A5;background:#FFF5F5}
+.mic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.mn{font-size:13px;font-weight:500}
+.md{font-size:10px;color:var(--muted);margin-top:1px}
+/* ── dual action buttons ── */
+.med-actions{display:flex;gap:5px;flex-shrink:0}
+.act-btn{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;flex-shrink:0}
+.act-btn.take{border-color:#D1D5DB}
+.act-btn.take.done{background:var(--teal);border-color:var(--teal)}
+.act-btn.miss-mark{border-color:#D1D5DB;color:#D1D5DB}
+.act-btn.miss-mark.done{background:#F87171;border-color:#F87171;color:#fff}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+.act-btn.pop{animation:pop .28s ease}
+.take-icon{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.act-btn.take.done .take-icon{opacity:1}
+
+/* Tip card */
+.tip-card{background:linear-gradient(135deg,#f0fdf4,#e0f5ee);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;border:1px solid #a7f3d0;display:flex;gap:10px;align-items:flex-start}
+.tip-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.tip-body{}
+.tip-label{font-size:10px;font-weight:500;color:var(--teal);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+.tip-text{font-size:12px;color:var(--td);line-height:1.6}
+
+/* Today focus */
+.focus-card{background:var(--card);border-radius:var(--r);padding:12px 13px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.focus-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.focus-title{font-size:13px;font-weight:700;color:var(--td)}
+.focus-sub{font-size:10px;color:var(--muted)}
+.focus-list{display:flex;flex-direction:column;gap:7px}
+.focus-item{display:flex;align-items:flex-start;gap:8px;padding:8px 9px;border-radius:9px;background:#F8F9FC;border:1px solid #EDF0F5}
+.focus-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;background:#9CA3AF}
+.focus-item.ok .focus-dot{background:var(--teal)}
+.focus-item.warn .focus-dot{background:var(--amber)}
+.focus-item.urgent .focus-dot{background:var(--red)}
+.focus-k{font-size:11px;font-weight:600}
+.focus-v{font-size:10px;color:var(--muted);margin-top:1px;line-height:1.5}
+.focus-main{width:100%;margin-top:10px;padding:10px;border:none;border-radius:10px;background:var(--teal);color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+.focus-main:active{opacity:.85}
+
+/* Med cards — MEDS TAB */
+.search-wrap{position:relative;margin-bottom:11px}
+.search-input{width:100%;padding:8px 13px 8px 34px;border:1px solid var(--border);border-radius:22px;font-size:12px;font-family:inherit;color:var(--text);background:var(--card);outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--teal)}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px}
+.med-card{background:var(--card);border-radius:var(--r);margin-bottom:9px;box-shadow:var(--sh);border:1px solid var(--border);overflow:hidden}
+.mc-main{padding:12px 12px 11px}
+.mc-top{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.mc-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.mc-info{flex:1}
+.mc-name{font-size:13px;font-weight:600}
+.mc-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.mc-badge{padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600}
+.mc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;border-top:1px solid var(--border);padding-top:7px}
+.mc-stat{text-align:center}
+.mc-sv{font-size:12px;font-weight:500}
+.mc-sk{font-size:9px;color:var(--muted);margin-top:1px}
+.srow{grid-column:1/-1;display:flex;align-items:center;gap:6px;padding-top:2px}
+.sbar{flex:1;height:4px;background:#EAECF0;border-radius:3px;overflow:hidden}
+.sfill{height:100%;border-radius:3px}
+.sfill.ok{background:var(--teal)}
+.sfill.warn{background:var(--amber)}
+.sfill.low{background:var(--red)}
+.stxt{font-size:9px;color:var(--muted);white-space:nowrap}
+.mc-footer{border-top:1px solid var(--border)}
+.mc-foot-row{display:flex}
+.mc-foot-btn{flex:1;padding:8px 6px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;border:none;background:none;font-family:inherit}
+.mc-foot-btn.detail{color:var(--muted)}
+.mc-foot-btn.detail:active{background:#F5F6F8}
+.mc-foot-btn.buy{color:var(--mt)}
+.mc-foot-btn.buy:active{background:var(--mtl)}
+.mc-foot-divider{width:1px;background:var(--border)}
+.mc-detail-panel{display:none;padding:11px 12px;background:#F8F9FC;border-top:1px solid var(--border);font-size:11px;line-height:1.7;color:var(--text)}
+.mc-detail-panel.open{display:block}
+.med-note{font-size:10px;color:var(--muted);background:#F8F9FC;border-radius:7px;padding:6px 8px;margin-top:7px}
+.med-note.urgent{color:#991B1B;background:#FEF2F2;border:1px solid #FECACA}
+
+/* Buy box */
+.buy-center{background:var(--card);border-radius:var(--r);padding:13px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.bc-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bc-title{font-size:13px;font-weight:700;color:var(--mt)}
+.mt-logo{width:26px;height:26px;border-radius:7px;background:var(--mt);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.buy-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.buy-item:last-of-type{border-bottom:none}
+.bi-name{font-size:12px;font-weight:500}
+.bi-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.bi-stock{font-size:10px;padding:1px 6px;border-radius:9px;font-weight:500;margin-left:5px}
+.bi-stock.low{background:var(--rl);color:#991B1B}
+.bi-stock.warn{background:var(--al);color:#92400E}
+.buy-btn{padding:5px 12px;background:var(--mt);color:#fff;border:none;border-radius:18px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .2s}
+.buy-btn:active{opacity:.8}
+.buy-btn.outline{background:none;border:1px solid var(--mt);color:var(--mt)}
+.buy-all-btn{width:100%;padding:10px;background:var(--mt);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-top:9px;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .2s}
+.buy-all-btn:active{opacity:.85}
+
+/* FAB */
+.fab{position:fixed;bottom:74px;right:14px;width:46px;height:46px;border-radius:50%;background:var(--teal);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(15,155,119,.38);z-index:200;transition:transform .15s}
+.fab:active{transform:scale(.9)}
+
+/* Remind tab */
+.remind-card{background:var(--card);border-radius:var(--r);padding:12px;margin-bottom:8px;box-shadow:var(--sh);border:1px solid var(--border)}
+.rc-inner{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.rc-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.rc-title{font-size:13px;font-weight:500}
+.rc-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.rc-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500;flex-shrink:0}
+.rc-badge.soon{background:var(--al);color:#92400E}
+.rc-badge.ok{background:var(--tl);color:var(--td)}
+.rc-badge.urgent{background:var(--rl);color:#991B1B}
+.rc-acts{display:flex;gap:5px}
+.rca{flex:1;padding:6px 8px;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;text-align:center;font-family:inherit;border:none;transition:opacity .2s}
+.rca:active{opacity:.8}
+.rca.pri{background:var(--teal);color:#fff}
+.rca.mto{background:var(--mt);color:#fff}
+.rca.out{background:none;border:1px solid var(--border);color:var(--text)}
+/* Profile card */
+.profile-card{background:var(--card);border-radius:var(--r);padding:13px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.pc-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:11px;border-bottom:1px solid var(--border)}
+.pc-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--tm));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0}
+.pc-name{font-size:15px;font-weight:700}
+.pc-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.pc-rows{display:flex;flex-direction:column;gap:0}
+.pc-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border)}
+.pc-row:last-child{border-bottom:none;padding-bottom:0}
+.pc-k{font-size:11px;color:var(--muted)}
+.pc-v{font-size:11px;font-weight:500;color:var(--text);text-align:right;max-width:55%}
+.allergy-tag{display:inline-block;padding:1px 6px;background:var(--rl);color:#991B1B;border-radius:8px;font-size:10px;font-weight:500;margin-left:4px}
+.emerg-card{background:#FEF2F2;border-radius:var(--r);padding:11px 13px;border:1px solid #FECACA;display:flex;align-items:center;gap:9px}
+.emerg-ico{font-size:20px;flex-shrink:0}
+.emerg-body{flex:1}
+.emerg-title{font-size:12px;font-weight:600;color:#991B1B}
+.emerg-info{font-size:11px;color:var(--muted);margin-top:2px}
+.emerg-call{padding:5px 12px;background:#DC2626;color:#fff;border:none;border-radius:18px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit}
+/* Toggle */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none;padding-bottom:0}
+.tg-t{font-size:12px;font-weight:500}
+.tg-s{font-size:10px;color:var(--muted);margin-top:2px}
+.tsw{width:38px;height:22px;border-radius:11px;background:var(--teal);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.tsw.off{background:#D1D5DB}
+.tkn{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;right:2px;transition:right .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tsw.off .tkn{right:18px}
+
+/* Records tab */
+.chart-box{background:var(--card);border-radius:var(--r);padding:13px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.ct{font-size:13px;font-weight:500}
+.pbtn{padding:3px 9px;border:1px solid var(--border);background:none;font-size:10px;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .2s}
+.pbtn:first-child{border-radius:5px 0 0 5px}
+.pbtn:last-child{border-radius:0 5px 5px 0}
+.pbtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.bchart{display:flex;gap:4px;align-items:flex-end;height:64px}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bv{font-size:8px;font-weight:500}
+.bbar{width:100%;border-radius:3px 3px 0 0}
+.bl{font-size:8px;color:var(--muted)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.sc{background:var(--card);border-radius:11px;padding:11px;box-shadow:var(--sh);border:1px solid var(--border)}
+.sv{font-size:20px;font-weight:700}
+.sk{font-size:10px;color:var(--muted);margin-top:2px}
+/* Calendar */
+.cal-card{background:var(--card);border-radius:var(--r);padding:13px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cal-month{font-size:13px;font-weight:500}
+.cal-nav{display:flex;gap:4px}
+.cal-nbtn{width:26px;height:26px;border:1px solid var(--border);background:none;border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cal-nbtn:active{background:var(--tl)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-hd{font-size:9px;color:var(--muted);text-align:center;padding:2px 0;font-weight:500}
+.cal-day{width:100%;aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;position:relative;cursor:default}
+.cal-day.clickable{cursor:pointer}
+.cal-day.ok{background:var(--tl);color:var(--td);font-weight:600}
+.cal-day.miss{background:var(--rl);color:#991B1B;font-weight:600}
+.cal-day.partial{background:var(--al);color:#92400E;font-weight:600}
+.cal-day.today{outline:2px solid var(--teal);outline-offset:-2px;font-weight:700}
+.cal-day.selected{box-shadow:inset 0 0 0 2px var(--blue)}
+.cal-day.future{color:#D1D5DB}
+.cal-day.empty{}
+.cal-legend{display:flex;gap:12px;margin-top:8px;justify-content:center}
+.cal-lg{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--muted)}
+.cal-lg-dot{width:9px;height:9px;border-radius:3px}
+.cal-tip{font-size:10px;color:var(--muted);text-align:center;margin-top:7px}
+.cal-detail{margin-top:9px;background:#F8F9FC;border:1px solid var(--border);border-radius:9px;padding:9px 10px}
+.cal-detail-t{font-size:11px;font-weight:600}
+.cal-detail-s{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5}
+.cal-actions{display:flex;gap:6px;margin-top:8px}
+.cal-act{flex:1;border:none;border-radius:7px;padding:7px 6px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit}
+.cal-act.ok{background:var(--tl);color:var(--td)}
+.cal-act.partial{background:var(--al);color:#92400E}
+.cal-act.miss{background:var(--rl);color:#991B1B}
+/* Health entry */
+.he-card{background:var(--card);border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.he-t{font-size:13px;font-weight:500;margin-bottom:10px}
+.he-row{display:flex;gap:6px;margin-bottom:6px;align-items:flex-end}
+.he-f{flex:1}
+.he-lbl{font-size:9px;color:var(--muted);margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+.he-inp{width:100%;padding:7px 8px;border:1px solid var(--border);border-radius:7px;font-size:14px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s}
+.he-inp:focus{border-color:var(--teal)}
+.he-u{font-size:9px;color:var(--muted);padding-bottom:7px;white-space:nowrap}
+.bsm{padding:6px 13px;background:var(--teal);color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .2s}
+.bsm:active{opacity:.8}
+/* SVG Line chart */
+.line-chart-wrap{position:relative;margin-bottom:6px}
+.line-chart-wrap svg{width:100%;overflow:visible}
+/* Log */
+.hr{display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid var(--border)}
+.hr:last-child{border-bottom:none}
+.hd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.hb{flex:1;font-size:11px}
+.ht{font-size:9px;color:var(--muted)}
+.htg{font-size:9px;padding:1px 5px;border-radius:7px;font-weight:500;margin-left:4px}
+
+/* AI Tab */
+.ai-hero{background:linear-gradient(135deg,#1a2744 0%,#2d4a8a 100%);border-radius:var(--r);padding:13px;margin-bottom:11px;color:#fff;position:relative;overflow:hidden}
+.ai-hero::before{content:'';position:absolute;right:-12px;top:-12px;width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.07)}
+.ai-ht{font-size:14px;font-weight:700;margin-bottom:3px}
+.ai-hs{font-size:10px;opacity:.75}
+.ai-head-row{display:flex;align-items:flex-start;justify-content:space-between}
+.ai-clear-btn{padding:3px 9px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);border-radius:12px;font-size:10px;color:#fff;cursor:pointer;font-family:inherit;flex-shrink:0}
+.ai-clear-btn:active{opacity:.7}
+.ai-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.ap{padding:5px 10px;background:var(--card);border:1px solid var(--border);border-radius:18px;font-size:11px;color:var(--text);cursor:pointer;transition:all .2s}
+.ap:active{background:var(--tl);border-color:var(--teal);color:var(--td)}
+.cwin{background:var(--card);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);margin-bottom:9px;min-height:250px;max-height:320px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.msg{display:flex;flex-direction:column;gap:2px;max-width:88%}
+.msg.u{align-self:flex-end;align-items:flex-end}
+.msg.a{align-self:flex-start;align-items:flex-start}
+.mb{padding:8px 11px;border-radius:14px;font-size:12px;line-height:1.6}
+.msg.u .mb{background:var(--teal);color:#fff;border-bottom-right-radius:3px}
+.msg.a .mb{background:#F1F3F8;color:var(--text);border-bottom-left-radius:3px}
+.mt2{font-size:9px;color:var(--muted)}
+.msndr{font-size:9px;color:var(--muted);font-weight:500}
+.tbub{display:flex;align-items:center;gap:3px;padding:9px 12px;background:#F1F3F8;border-radius:14px;border-bottom-left-radius:3px;width:52px}
+.tdot{width:5px;height:5px;border-radius:50%;background:#9CA3AF;animation:ta 1.2s ease-in-out infinite}
+.tdot:nth-child(2){animation-delay:.2s}
+.tdot:nth-child(3){animation-delay:.4s}
+@keyframes ta{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+.ci-row{display:flex;gap:6px;align-items:flex-end}
+.cinp{flex:1;padding:9px 11px;border:1px solid var(--border);border-radius:19px;font-size:12px;font-family:inherit;resize:none;background:var(--card);color:var(--text);outline:none;max-height:74px;transition:border-color .2s;line-height:1.4}
+.cinp:focus{border-color:var(--teal)}
+.sbtn{width:34px;height:34px;border-radius:50%;background:var(--teal);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s}
+.sbtn:disabled{opacity:.38;cursor:not-allowed}
+.sbtn:not(:disabled):active{opacity:.8}
+.disc{font-size:9px;color:var(--muted);text-align:center;padding:4px 0;line-height:1.5}
+
+/* Modals */
+.mbk{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.mbk.open{display:flex}
+.msh{background:var(--card);border-radius:18px 18px 0 0;width:100%;max-width:430px;padding:16px 15px 32px;max-height:92vh;overflow-y:auto;animation:su .26s cubic-bezier(.34,1.56,.64,1)}
+@keyframes su{from{transform:translateY(38%);opacity:.5}to{transform:translateY(0);opacity:1}}
+.mhd{width:32px;height:3px;background:var(--border);border-radius:2px;margin:0 auto 14px}
+.mt-m{font-size:14px;font-weight:700;margin-bottom:14px}
+.fg{margin-bottom:10px}
+.fl{font-size:10px;font-weight:500;color:var(--muted);margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:.4px}
+.fi{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s}
+.fi:focus{border-color:var(--teal)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bmain{width:100%;padding:11px;background:var(--teal);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:4px;transition:opacity .2s}
+.bmain:active{opacity:.85}
+.bcancel{width:100%;padding:9px;border:none;background:none;color:var(--muted);font-size:12px;cursor:pointer;margin-top:2px;font-family:inherit}
+/* Buy modal */
+.mt-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:var(--mtl);border:1px solid #FFB899;border-radius:18px;font-size:10px;font-weight:500;color:var(--mt);margin-bottom:11px}
+.bm-item{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--border)}
+.bm-item:last-of-type{border-bottom:none}
+.bm-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.bm-name{font-size:12px;font-weight:600}
+.bm-detail{font-size:10px;color:var(--muted);margin-top:2px}
+.mt-buy-btn{padding:6px 13px;background:var(--mt);color:#fff;border:none;border-radius:18px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.mt-buy-btn:active{opacity:.8}
+.mt-note{font-size:10px;color:var(--muted);text-align:center;padding:9px 0 3px;line-height:1.5}
+/* Missed modal */
+.miss-opts{display:flex;flex-direction:column;gap:7px}
+.miss-opt{padding:11px 13px;border-radius:9px;font-size:12px;cursor:pointer;border:none;font-family:inherit;transition:opacity .2s;text-align:left}
+.miss-opt:active{opacity:.8}
+.miss-opt.take-now{background:var(--teal);color:#fff}
+.miss-opt.rec-miss{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA}
+.miss-opt.later{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.miss-advice{background:#F8F9FC;border-radius:9px;padding:11px;margin-bottom:13px;font-size:11px;color:var(--text);line-height:1.7}
+
+/* Bottom nav */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;padding:5px 0 14px;z-index:150;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;padding:4px 0;font-family:inherit}
+.ni svg{width:19px;height:19px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+.nlbl{font-size:9px;color:var(--muted);transition:color .2s}
+.nb.on .ni svg{stroke:var(--teal)}
+.nb.on .nlbl{color:var(--teal);font-weight:600}
+
+/* Toast */
+.toast{position:fixed;top:74px;left:50%;transform:translateX(-50%) translateY(-8px);background:#1A1A2E;color:#fff;padding:8px 16px;border-radius:18px;font-size:11px;z-index:999;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="hdr">
+  <div class="htop">
+    <div class="htitle">💊 慢病用药小管家</div>
+    <div class="hright">
+      <div class="hbuy-btn" onclick="openBuyModal(null)">🛒 美团买药</div>
+      <div class="hav">张</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══ TAB 1: 今日用药 ══ -->
+<div class="tc on" id="tab-today">
+  <div class="hero">
+    <div class="hdate" id="today-date"></div>
+    <div class="hgreet" id="hero-greet"></div>
+    <div class="hprog">
+      <div class="pcircle">
+        <svg viewBox="0 0 58 58"><circle class="pr-bg" cx="29" cy="29" r="24"/><circle class="pr-fg" cx="29" cy="29" r="24" id="pring" stroke-dasharray="150.8" stroke-dashoffset="150.8"/></svg>
+        <div class="pnum" id="ppct">0%</div>
+      </div>
+      <div class="hstats">
+        <div class="hst"><div class="hst-n" id="cnt-ok">0</div><div class="hst-l">已服用</div></div>
+        <div class="hst"><div class="hst-n" id="cnt-nd">5</div><div class="hst-l">待服用</div></div>
+        <div class="hst"><div class="hst-n" id="cnt-streak">12</div><div class="hst-l">连续天</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="focus-card">
+    <div class="focus-head">
+      <div class="focus-title">今日三件事</div>
+      <div class="focus-sub" id="focus-progress">0/3 完成</div>
+    </div>
+    <div class="focus-list">
+      <div class="focus-item warn" id="task-dose-item">
+        <div class="focus-dot"></div>
+        <div style="flex:1">
+          <div class="focus-k">1. 按时完成用药打卡</div>
+          <div class="focus-v" id="task-dose-sub">还有 5 次待服</div>
+        </div>
+      </div>
+      <div class="focus-item warn" id="task-health-item">
+        <div class="focus-dot"></div>
+        <div style="flex:1">
+          <div class="focus-k">2. 录入今日健康指标</div>
+          <div class="focus-v" id="task-health-sub">建议录入血压/血糖</div>
+        </div>
+      </div>
+      <div class="focus-item warn" id="task-renew-item">
+        <div class="focus-dot"></div>
+        <div style="flex:1">
+          <div class="focus-k">3. 处理续方购药</div>
+          <div class="focus-v" id="task-renew-sub">请优先查看断药风险最高药品</div>
+        </div>
+      </div>
+    </div>
+    <button class="focus-main" id="focus-main-btn" onclick="followNextStep()">去处理最重要的一步</button>
+  </div>
+
+  <!-- 健康洞察（点击跳转记录页录入） -->
+  <div class="irow">
+    <div class="ic" onclick="goTab('records',3);setTimeout(()=>document.getElementById('bp-s').focus(),300)">
+      <div class="ic-lbl">今日血压</div>
+      <div class="ic-val" id="ic-bp" style="color:var(--teal)">121<span style="font-size:11px;font-weight:400">/77</span></div>
+      <div class="ic-chip ok" id="ic-bp-chip">正常</div>
+    </div>
+    <div class="ic" onclick="goTab('records',3);setTimeout(()=>document.getElementById('glu').focus(),300)">
+      <div class="ic-lbl">空腹血糖</div>
+      <div class="ic-val" id="ic-glu" style="color:var(--amber)">7.2</div>
+      <div class="ic-chip warn" id="ic-glu-chip">略偏高</div>
+    </div>
+    <div class="ic">
+      <div class="ic-lbl">本周依从率</div>
+      <div class="ic-val" style="color:var(--teal)">86<span style="font-size:11px;font-weight:400">%</span></div>
+      <div class="ic-chip ok">良好</div>
+    </div>
+  </div>
+
+  <!-- 全程追踪 -->
+  <div class="flow">
+    <div class="fl-title">📋 就诊用药全程追踪</div>
+    <div class="fl-steps">
+      <div class="fl-step"><div class="fc done">🩺</div><div class="fl-lbl">线上<br>问诊</div></div>
+      <div class="fl-line d"></div>
+      <div class="fl-step"><div class="fc done">🛒</div><div class="fl-lbl">购药<br>到位</div></div>
+      <div class="fl-line d"></div>
+      <div class="fl-step cs"><div class="fc curr">📅</div><div class="fl-lbl">按时<br>用药</div></div>
+      <div class="fl-line"></div>
+      <div class="fl-step"><div class="fc pend">🔄</div><div class="fl-lbl">续方<br>复诊</div></div>
+    </div>
+  </div>
+
+  <!-- 预警 -->
+  <div class="al danger">
+    <div class="al-dot"></div>
+    <div class="al-body"><strong id="today-stock-alert-title">格列美脲片库存告急</strong><small id="today-stock-alert-sub">仅剩 7 天，建议尽快续方</small></div>
+    <div class="al-btn mt" onclick="openBuyModal('格列美脲片')">🛒 买药 →</div>
+  </div>
+  <div class="al warn">
+    <div class="al-dot"></div>
+    <div class="al-body"><strong>复诊提醒</strong><small id="today-revisit-alert-sub">距5月1日糖尿病科复诊还有 5 天</small></div>
+    <div class="al-btn" onclick="goTab('remind',2)">查看 →</div>
+  </div>
+  <div class="al info" id="renew-action-card">
+    <div class="al-dot"></div>
+    <div class="al-body"><strong id="renew-action-title">续方行动建议</strong><small id="renew-action-sub">请在断药前完成复诊续方，避免治疗中断</small></div>
+    <div class="al-btn" onclick="goTab('remind',2)">去处理 →</div>
+  </div>
+  <div class="al success" id="al-done" style="display:none">
+    <div class="al-dot"></div>
+    <div class="al-body"><strong>今日全部用药完成！🎉</strong><small>连续打卡中，继续保持！</small></div>
+  </div>
+
+  <!-- 用药时间轴 — 双按钮（✓已服 / ✗漏服） -->
+  <div class="tslot">
+    <div class="sh"><div class="stag am">🌅 早餐后</div><div class="stime">07:30</div></div>
+    <div class="mrow" id="mr-m1">
+      <div class="mic" style="background:#FEF9C3">💊</div>
+      <div style="flex:1"><div class="mn">二甲双胍片</div><div class="md">500mg · 1片 · 控制血糖</div></div>
+      <div class="med-actions">
+        <button class="act-btn take" id="tk-m1" onclick="markTaken('m1')" title="已服用"><svg class="take-icon" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg></button>
+        <button class="act-btn miss-mark" id="ms-m1" onclick="markMissPrompt('m1')" title="标记漏服">✕</button>
+      </div>
+    </div>
+    <div class="mrow" id="mr-m2">
+      <div class="mic" style="background:#DBEAFE">💊</div>
+      <div style="flex:1"><div class="mn">苯磺酸氨氯地平</div><div class="md">5mg · 1片 · 控制血压</div></div>
+      <div class="med-actions">
+        <button class="act-btn take" id="tk-m2" onclick="markTaken('m2')" title="已服用"><svg class="take-icon" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg></button>
+        <button class="act-btn miss-mark" id="ms-m2" onclick="markMissPrompt('m2')" title="标记漏服">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tslot">
+    <div class="sh"><div class="stag noon">☀️ 午餐后</div><div class="stime">12:00</div></div>
+    <div class="mrow" id="mr-m3">
+      <div class="mic" style="background:#FEF9C3">💊</div>
+      <div style="flex:1"><div class="mn">二甲双胍片</div><div class="md">500mg · 1片 · 控制血糖</div></div>
+      <div class="med-actions">
+        <button class="act-btn take" id="tk-m3" onclick="markTaken('m3')" title="已服用"><svg class="take-icon" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg></button>
+        <button class="act-btn miss-mark" id="ms-m3" onclick="markMissPrompt('m3')" title="标记漏服">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tslot">
+    <div class="sh"><div class="stag pm">🌙 晚餐后</div><div class="stime">18:30</div></div>
+    <div class="mrow" id="mr-m4">
+      <div class="mic" style="background:#FEF9C3">💊</div>
+      <div style="flex:1"><div class="mn">格列美脲片</div><div class="md">1mg · 1片 · 控制血糖</div></div>
+      <div class="med-actions">
+        <button class="act-btn take" id="tk-m4" onclick="markTaken('m4')" title="已服用"><svg class="take-icon" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg></button>
+        <button class="act-btn miss-mark" id="ms-m4" onclick="markMissPrompt('m4')" title="标记漏服">✕</button>
+      </div>
+    </div>
+    <div class="mrow" id="mr-m5">
+      <div class="mic" style="background:#EDE9FE">💊</div>
+      <div style="flex:1"><div class="mn">阿托伐他汀钙片</div><div class="md">20mg · 1片 · 控制血脂</div></div>
+      <div class="med-actions">
+        <button class="act-btn take" id="tk-m5" onclick="markTaken('m5')" title="已服用"><svg class="take-icon" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg></button>
+        <button class="act-btn miss-mark" id="ms-m5" onclick="markMissPrompt('m5')" title="标记漏服">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 每日健康小贴士 -->
+  <div class="tip-card" id="tip-card">
+    <div class="tip-icon">💡</div>
+    <div class="tip-body">
+      <div class="tip-label">今日用药小贴士</div>
+      <div class="tip-text" id="tip-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB 2: 我的药单 ══ -->
+<div class="tc" id="tab-meds">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" placeholder="搜索药品名称…" oninput="searchMeds(this.value)">
+  </div>
+
+  <div class="slabel">库存预警 · 需购买</div>
+  <div class="buy-center">
+    <div class="bc-head">
+      <div class="mt-logo">🛒</div>
+      <div><div class="bc-title">美团买药 · 极速到家</div><div style="font-size:9px;color:var(--muted)">最快 30 分钟配送 · 原厂正品</div></div>
+    </div>
+    <div class="buy-item">
+      <div style="flex:1"><div class="bi-name">格列美脲片 <span class="bi-stock low" id="buy-stock-tag-m4">⚠ 仅剩7天</span></div><div class="bi-meta">1mg × 30片/盒 · 亚邦医药</div></div>
+      <button class="buy-btn" onclick="openBuyModal('格列美脲片')">去买药</button>
+    </div>
+    <div class="buy-item">
+      <div style="flex:1"><div class="bi-name">阿托伐他汀钙片 <span class="bi-stock warn" id="buy-stock-tag-m5">余13天</span></div><div class="bi-meta">20mg × 7片/板 · 辉瑞制药</div></div>
+      <button class="buy-btn outline" onclick="openBuyModal('阿托伐他汀钙片')">去买药</button>
+    </div>
+    <button class="buy-all-btn" onclick="buyAllOnMeituan()">🛒 一键购买全部预警药品</button>
+  </div>
+
+  <div class="slabel" id="meds-label">当前用药 · 4种</div>
+  <div id="meds-list">
+
+  <div class="med-card" data-name="二甲双胍片">
+    <div class="mc-main">
+      <div class="mc-top">
+        <div class="mc-ico" style="background:#FEF9C3">💊</div>
+        <div class="mc-info"><div class="mc-name">二甲双胍片</div><div class="mc-sub">适应症：2型糖尿病 · 处方药</div></div>
+        <div class="mc-badge" style="background:var(--tl);color:var(--td)">用药中</div>
+      </div>
+      <div class="mc-stats">
+        <div class="mc-stat"><div class="mc-sv">500mg</div><div class="mc-sk">单次剂量</div></div>
+        <div class="mc-stat"><div class="mc-sv">早午各1</div><div class="mc-sk">服药频次</div></div>
+        <div class="mc-stat"><div class="mc-sv">餐后服</div><div class="mc-sk">服药方式</div></div>
+        <div class="srow"><div class="sbar"><div class="sfill ok" style="width:62%"></div></div><div class="stxt">剩余约31天</div></div>
+      </div>
+    </div>
+    <div class="mc-footer"><div class="mc-foot-row">
+      <button class="mc-foot-btn detail" onclick="toggleDetail(this)">📋 药品详情</button>
+      <div class="mc-foot-divider"></div>
+      <button class="mc-foot-btn buy" onclick="openBuyModal('二甲双胍片')">🛒 去美团买药</button>
+    </div></div>
+    <div class="mc-detail-panel"><b>药理：</b>减少肝糖原合成、增加外周葡萄糖利用，不促进胰岛素分泌，低血糖风险低。<br><b>禁忌：</b>肾功能不全（eGFR&lt;30）、严重肝病、酗酒者禁用。<br><b>副作用：</b>初期可能胃肠不适，餐中服可缓解。<br><b>开方医生：</b>李主任 · 糖尿病科 · 2025年3月1日</div>
+  </div>
+
+  <div class="med-card" data-name="苯磺酸氨氯地平">
+    <div class="mc-main">
+      <div class="mc-top">
+        <div class="mc-ico" style="background:#DBEAFE">💊</div>
+        <div class="mc-info"><div class="mc-name">苯磺酸氨氯地平</div><div class="mc-sub">适应症：高血压 · 处方药</div></div>
+        <div class="mc-badge" style="background:var(--tl);color:var(--td)">用药中</div>
+      </div>
+      <div class="mc-stats">
+        <div class="mc-stat"><div class="mc-sv">5mg</div><div class="mc-sk">单次剂量</div></div>
+        <div class="mc-stat"><div class="mc-sv">每日1次</div><div class="mc-sk">服药频次</div></div>
+        <div class="mc-stat"><div class="mc-sv">早餐后</div><div class="mc-sk">服药方式</div></div>
+        <div class="srow"><div class="sbar"><div class="sfill ok" style="width:80%"></div></div><div class="stxt">剩余约40天</div></div>
+      </div>
+    </div>
+    <div class="mc-footer"><div class="mc-foot-row">
+      <button class="mc-foot-btn detail" onclick="toggleDetail(this)">📋 药品详情</button>
+      <div class="mc-foot-divider"></div>
+      <button class="mc-foot-btn buy" onclick="openBuyModal('苯磺酸氨氯地平片')">🛒 去美团买药</button>
+    </div></div>
+    <div class="mc-detail-panel"><b>药理：</b>钙离子拮抗剂，扩张外周血管与冠状动脉，长效降压，半衰期约35小时。<br><b>禁忌：</b>对本品过敏、心源性休克禁用；勿突然停药。<br><b>副作用：</b>踝部轻度水肿、头痛、面色潮红属正常，可自行缓解。<br><b>开方医生：</b>王主任 · 心内科 · 2025年2月15日</div>
+  </div>
+
+  <div class="med-card" data-name="格列美脲片" style="border-color:#FECACA">
+    <div class="mc-main">
+      <div class="mc-top">
+        <div class="mc-ico" style="background:#FEF3C7">💊</div>
+        <div class="mc-info"><div class="mc-name">格列美脲片</div><div class="mc-sub">适应症：2型糖尿病 · 处方药</div></div>
+        <div class="mc-badge" style="background:var(--rl);color:#991B1B">库存告急</div>
+      </div>
+      <div class="mc-stats">
+        <div class="mc-stat"><div class="mc-sv">1mg</div><div class="mc-sk">单次剂量</div></div>
+        <div class="mc-stat"><div class="mc-sv">每日1次</div><div class="mc-sk">服药频次</div></div>
+        <div class="mc-stat"><div class="mc-sv">晚餐前</div><div class="mc-sk">服药方式</div></div>
+        <div class="srow"><div class="sbar"><div class="sfill low" style="width:14%" id="fill-m4"></div></div><div class="stxt" style="color:var(--red)" id="stock-text-m4">⚠ 仅剩7天</div></div>
+      </div>
+      <div class="med-note urgent" id="med-note-m4">🔴 库存告急！5月2日前需续方购药，切勿自行停药。</div>
+    </div>
+    <div class="mc-footer"><div class="mc-foot-row">
+      <button class="mc-foot-btn detail" onclick="toggleDetail(this)">📋 药品详情</button>
+      <div class="mc-foot-divider"></div>
+      <button class="mc-foot-btn buy" onclick="openBuyModal('格列美脲片')">🛒 立即买药</button>
+    </div></div>
+    <div class="mc-detail-panel"><b>药理：</b>磺脲类促泌剂，刺激胰岛β细胞分泌胰岛素，降低餐后血糖。<br><b>⚠ 低血糖风险：</b>过量或漏餐可致低血糖（头晕、颤抖、出汗），随身携带糖果！<br><b>禁忌：</b>1型糖尿病、严重肾功能不全、妊娠期禁用。<br><b>开方医生：</b>李主任 · 糖尿病科 · 2025年3月1日</div>
+  </div>
+
+  <div class="med-card" data-name="阿托伐他汀钙片">
+    <div class="mc-main">
+      <div class="mc-top">
+        <div class="mc-ico" style="background:#EDE9FE">💊</div>
+        <div class="mc-info"><div class="mc-name">阿托伐他汀钙片</div><div class="mc-sub">适应症：高血脂 · 处方药</div></div>
+        <div class="mc-badge" style="background:var(--al);color:#92400E">即将不足</div>
+      </div>
+      <div class="mc-stats">
+        <div class="mc-stat"><div class="mc-sv">20mg</div><div class="mc-sk">单次剂量</div></div>
+        <div class="mc-stat"><div class="mc-sv">每日1次</div><div class="mc-sk">服药频次</div></div>
+        <div class="mc-stat"><div class="mc-sv">晚餐后</div><div class="mc-sk">服药方式</div></div>
+        <div class="srow"><div class="sbar"><div class="sfill warn" style="width:26%" id="fill-m5"></div></div><div class="stxt" style="color:var(--amber)" id="stock-text-m5">剩余约13天</div></div>
+      </div>
+    </div>
+    <div class="mc-footer"><div class="mc-foot-row">
+      <button class="mc-foot-btn detail" onclick="toggleDetail(this)">📋 药品详情</button>
+      <div class="mc-foot-divider"></div>
+      <button class="mc-foot-btn buy" onclick="openBuyModal('阿托伐他汀钙片')">🛒 去美团买药</button>
+    </div></div>
+    <div class="mc-detail-panel"><b>药理：</b>HMG-CoA还原酶抑制剂，抑制肝脏胆固醇合成，降低LDL-C、甘油三酯。<br><b>注意：</b>避免与大量西柚汁同服；定期监测肝功能和CK（肌酸激酶）。<br><b>禁忌：</b>活动性肝病、孕期及哺乳期禁用。<br><b>开方医生：</b>王主任 · 心内科 · 2025年2月15日</div>
+  </div>
+
+  </div>
+
+  <div class="slabel">已停药</div>
+  <div class="med-card" style="opacity:.55">
+    <div class="mc-main">
+      <div class="mc-top">
+        <div class="mc-ico" style="background:#F3F4F6">💊</div>
+        <div class="mc-info"><div class="mc-name">厄贝沙坦片</div><div class="mc-sub">适应症：高血压 · 已停用</div></div>
+        <div class="mc-badge" style="background:#F3F4F6;color:#9CA3AF">已停药</div>
+      </div>
+      <div style="font-size:10px;color:var(--muted)">停药：2025年3月12日 · 医嘱更换降压方案</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB 3: 提醒 ══ -->
+<div class="tc" id="tab-remind">
+  <!-- 个人档案卡 -->
+  <div class="slabel">个人档案</div>
+  <div class="profile-card">
+    <div class="pc-head">
+      <div class="pc-av">张</div>
+      <div><div class="pc-name">张先生</div><div class="pc-sub">男 · 55岁 · 慢性病患者</div></div>
+    </div>
+    <div class="pc-rows">
+      <div class="pc-row"><div class="pc-k">主要诊断</div><div class="pc-v">2型糖尿病 · 高血压 · 高血脂</div></div>
+      <div class="pc-row"><div class="pc-k">过敏史</div><div class="pc-v"><span class="allergy-tag">青霉素</span><span class="allergy-tag">磺胺类</span></div></div>
+      <div class="pc-row"><div class="pc-k">主治医生</div><div class="pc-v">李主任 / 糖尿病科<br>王主任 / 心内科</div></div>
+      <div class="pc-row"><div class="pc-k">就诊医院</div><div class="pc-v">北京协和医院</div></div>
+      <div class="pc-row"><div class="pc-k">医保类型</div><div class="pc-v">北京城镇职工医保</div></div>
+    </div>
+  </div>
+
+  <!-- 紧急联系人 -->
+  <div class="emerg-card" style="margin-bottom:10px">
+    <div class="emerg-ico">🆘</div>
+    <div class="emerg-body">
+      <div class="emerg-title">紧急联系人 · 张太太</div>
+      <div class="emerg-info">138-0000-1234 · 如发生低血糖或不适请立即联系</div>
+    </div>
+    <button class="emerg-call" onclick="showToast('📞 正在拨打紧急联系人…')">拨打</button>
+  </div>
+
+  <div class="slabel">复诊提醒</div>
+  <div class="remind-card">
+    <div class="rc-inner">
+      <div class="rc-ico" style="background:#FEE2E2">🏥</div>
+      <div style="flex:1"><div class="rc-title">糖尿病科复诊</div><div class="rc-meta" id="rv-main-meta">5月1日（周三）· 09:00 · 李主任 · 已预约</div></div>
+      <div class="rc-badge soon" id="rv-main-badge">5天后</div>
+    </div>
+    <div class="rc-acts">
+      <button class="rca out" onclick="showToast('📅 已加入日历')">加入日历</button>
+      <button class="rca pri" onclick="showToast('🔔 提醒已设置')">设提醒</button>
+      <button class="rca mto" onclick="buyAllOnMeituan()">🛒 复诊购药</button>
+    </div>
+  </div>
+  <div class="remind-card">
+    <div class="rc-inner">
+      <div class="rc-ico" style="background:var(--tl)">🏥</div>
+      <div style="flex:1"><div class="rc-title">心内科定期检查</div><div class="rc-meta" id="rv-second-meta">5月20日（周一）· 14:00 · 待预约</div></div>
+      <div class="rc-badge ok" id="rv-second-badge">25天后</div>
+    </div>
+    <div class="rc-acts">
+      <button class="rca out" onclick="showToast('正在跳转预约…')">立即预约</button>
+      <button class="rca pri" onclick="showToast('🔔 提醒已设置')">设提醒</button>
+    </div>
+  </div>
+
+  <div class="slabel">续方决策</div>
+  <div class="remind-card" id="renew-decision-card">
+    <div class="rc-inner">
+      <div class="rc-ico" style="background:#EFF6FF">🧭</div>
+      <div style="flex:1"><div class="rc-title" id="renew-decision-title">优先处理：格列美脲片续方</div><div class="rc-meta" id="renew-decision-meta">建议先线上复诊开方，再完成购药</div></div>
+      <div class="rc-badge soon" id="renew-decision-badge">处理中</div>
+    </div>
+    <div class="rc-acts">
+      <button class="rca pri" id="renew-main-btn" onclick="startRenewFlow()">按建议一步处理</button>
+    </div>
+  </div>
+
+  <div class="slabel">药品明细（可选查看）</div>
+  <div class="remind-card" style="border-color:#FECACA">
+    <div class="rc-inner">
+      <div class="rc-ico" style="background:#FEE2E2">📋</div>
+      <div style="flex:1"><div class="rc-title">格列美脲片 — 续方购药</div><div class="rc-meta" id="renew-meta-m4">预计断药：5月2日 · 仅剩7天 · 极度紧急</div></div>
+      <div class="rc-badge urgent" id="renew-badge-m4">紧急</div>
+    </div>
+    <div class="rc-acts">
+      <button class="rca out" onclick="showToast('🏥 正在跳转线上续方…')">线上续方</button>
+      <button class="rca mto" onclick="openBuyModal('格列美脲片')">🛒 买药</button>
+    </div>
+  </div>
+  <div class="remind-card">
+    <div class="rc-inner">
+      <div class="rc-ico" style="background:var(--al)">📋</div>
+      <div style="flex:1"><div class="rc-title">阿托伐他汀钙片 — 续方购药</div><div class="rc-meta" id="renew-meta-m5">预计断药：5月8日 · 可5月1日复诊时续方</div></div>
+      <div class="rc-badge soon" id="renew-badge-m5">13天后</div>
+    </div>
+    <div class="rc-acts">
+      <button class="rca out" onclick="showToast('🏥 正在跳转线上续方…')">线上续方</button>
+      <button class="rca mto" onclick="openBuyModal('阿托伐他汀钙片')">🛒 买药</button>
+    </div>
+  </div>
+
+  <div class="slabel">通知设置</div>
+  <div class="card">
+    <div class="toggle-row"><div><div class="tg-t">服药推送提醒</div><div class="tg-s">服药时间前 15 分钟通知</div></div><div class="tsw" data-key="dose_push" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
+    <div class="toggle-row"><div><div class="tg-t">漏服补救提醒</div><div class="tg-s">超时 1 小时未打卡时提醒</div></div><div class="tsw" data-key="missed_recovery" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
+    <div class="toggle-row"><div><div class="tg-t">连续漏服升级提醒</div><div class="tg-s">连续漏服 2 次时，通知家属</div></div><div class="tsw off" data-key="family_escalation" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
+    <div class="toggle-row"><div><div class="tg-t">库存不足预警</div><div class="tg-s">药品不足 14 天自动预警</div></div><div class="tsw" data-key="stock_low" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
+    <div class="toggle-row"><div><div class="tg-t">复诊日提前提醒</div><div class="tg-s">复诊前 3 天及当日提醒</div></div><div class="tsw" data-key="revisit_push" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
+    <div class="toggle-row"><div><div class="tg-t">断药前推送买药入口</div><div class="tg-s">自动显示美团买药快捷链接</div></div><div class="tsw" data-key="buy_shortcut" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
+  </div>
+</div>
+
+<!-- ══ TAB 4: 记录 ══ -->
+<div class="tc" id="tab-records">
+  <div class="chart-box">
+    <div class="ch">
+      <div class="ct">📊 服药依从率</div>
+      <div style="display:flex"><button class="pbtn on" onclick="setPeriod(this,'week')">近7天</button><button class="pbtn" onclick="setPeriod(this,'month')">近30天</button></div>
+    </div>
+    <div class="bchart" id="adh-chart"></div>
+  </div>
+
+  <div class="sg">
+    <div class="sc"><div class="sv" style="color:var(--teal)">86%</div><div class="sk">本月平均依从率</div></div>
+    <div class="sc"><div class="sv" style="color:#7C3AED" id="stat-streak">12天</div><div class="sk">当前连续打卡</div></div>
+    <div class="sc"><div class="sv" style="color:var(--amber)">3次</div><div class="sk">本月漏服次数</div></div>
+    <div class="sc"><div class="sv" style="color:var(--teal)">21天</div><div class="sk">历史最长连续</div></div>
+  </div>
+
+  <!-- 打卡月历 -->
+  <div class="cal-card">
+    <div class="cal-head">
+      <div class="cal-month" id="cal-month"></div>
+      <div class="cal-nav">
+        <button class="cal-nbtn" onclick="jumpToCurrentMonth()">今</button>
+        <button class="cal-nbtn" onclick="shiftMonth(-1)">‹</button>
+        <button class="cal-nbtn" onclick="shiftMonth(1)">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <div class="cal-lg"><div class="cal-lg-dot" style="background:var(--tl)"></div>全勤</div>
+      <div class="cal-lg"><div class="cal-lg-dot" style="background:var(--al)"></div>部分</div>
+      <div class="cal-lg"><div class="cal-lg-dot" style="background:var(--rl)"></div>漏服</div>
+      <div class="cal-lg"><div class="cal-lg-dot" style="background:#F0F1F5"></div>未来</div>
+    </div>
+    <div class="cal-tip">点击某一天可查看详情并修正记录</div>
+    <div class="cal-detail">
+      <div class="cal-detail-t" id="cal-detail-title">--</div>
+      <div class="cal-detail-s" id="cal-detail-status">请选择日期</div>
+      <div class="cal-actions">
+        <button class="cal-act ok" onclick="markSelectedCalendar('ok')">标记全勤</button>
+        <button class="cal-act partial" onclick="markSelectedCalendar('partial')">标记部分</button>
+        <button class="cal-act miss" onclick="markSelectedCalendar('miss')">标记漏服</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 录入健康指标 -->
+  <div class="he-card">
+    <div class="he-t">🩺 录入今日健康指标</div>
+    <div class="he-row">
+      <div class="he-f"><div class="he-lbl">收缩压</div><input class="he-inp" type="number" placeholder="如 118" id="bp-s"></div>
+      <div class="he-u">/</div>
+      <div class="he-f"><div class="he-lbl">舒张压</div><input class="he-inp" type="number" placeholder="如 76" id="bp-d"></div>
+      <div class="he-u">mmHg</div>
+    </div>
+    <div class="he-row">
+      <div class="he-f"><div class="he-lbl">空腹血糖</div><input class="he-inp" type="number" step="0.1" placeholder="如 5.8" id="glu"></div>
+      <div class="he-u">mmol/L</div>
+    </div>
+    <div class="he-row" style="margin-bottom:0">
+      <div class="he-f"><div class="he-lbl">体重（选填）</div><input class="he-inp" type="number" step="0.1" placeholder="kg" id="wt"></div>
+      <button class="bsm" onclick="saveHealth()">保存</button>
+    </div>
+  </div>
+
+  <!-- SVG折线图：血压趋势 -->
+  <div class="chart-box">
+    <div class="ch"><div class="ct">❤️ 血压趋势（近7天）</div></div>
+    <div class="line-chart-wrap" style="padding:4px 0 20px">
+      <svg id="bp-svg" height="90" viewBox="0 0 350 90" preserveAspectRatio="none"></svg>
+    </div>
+    <div style="display:flex;gap:12px;font-size:10px;color:var(--muted)">
+      <span style="display:flex;align-items:center;gap:3px"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#DC2626" stroke-width="2" stroke-dasharray="4,2"/></svg>收缩压</span>
+      <span style="display:flex;align-items:center;gap:3px"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#1D6FB4" stroke-width="2"/></svg>舒张压</span>
+      <span style="display:flex;align-items:center;gap:3px"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="#ccc" stroke-width="1" stroke-dasharray="2,2"/></svg>正常上限</span>
+    </div>
+  </div>
+
+  <div class="slabel">近期用药日志</div>
+  <div class="card" id="log-list">
+    <div class="hr"><div class="hd" style="background:var(--teal)"></div><div class="hb"><span>苯磺酸氨氯地平 5mg 已服</span><span class="htg" style="background:var(--tl);color:var(--td)">正常</span></div><div class="ht">今日 07:38</div></div>
+    <div class="hr"><div class="hd" style="background:var(--teal)"></div><div class="hb"><span>二甲双胍片 500mg 已服</span><span class="htg" style="background:var(--tl);color:var(--td)">正常</span></div><div class="ht">今日 07:38</div></div>
+    <div class="hr"><div class="hd" style="background:var(--amber)"></div><div class="hb"><span>格列美脲片 1mg</span><span class="htg" style="background:var(--al);color:#92400E">漏服</span></div><div class="ht">昨日 18:30</div></div>
+    <div class="hr"><div class="hd" style="background:var(--teal)"></div><div class="hb"><span>阿托伐他汀钙片 20mg 已服</span><span class="htg" style="background:var(--tl);color:var(--td)">正常</span></div><div class="ht">昨日 18:52</div></div>
+    <div class="hr"><div class="hd" style="background:var(--teal)"></div><div class="hb"><span>二甲双胍片 500mg（午）已服</span><span class="htg" style="background:var(--tl);color:var(--td)">正常</span></div><div class="ht">昨日 12:04</div></div>
+  </div>
+</div>
+
+<!-- ══ TAB 5: AI助手 ══ -->
+<div class="tc" id="tab-ai">
+  <div class="ai-hero">
+    <div class="ai-head-row">
+      <div>
+        <div style="font-size:18px;margin-bottom:5px">🤖</div>
+        <div class="ai-ht">AI 用药助手</div>
+        <div class="ai-hs">基于您的用药档案，随时解答用药疑问</div>
+      </div>
+      <button class="ai-clear-btn" onclick="clearChat()">清空对话</button>
+    </div>
+  </div>
+
+  <div class="slabel">快速提问</div>
+  <div class="ai-pills">
+    <div class="ap" onclick="quickAsk('我漏服了一次二甲双胍，应该怎么处理？')">漏服怎么办？</div>
+    <div class="ap" onclick="quickAsk('格列美脲片和二甲双胍能同时服用吗？')">可以同服吗？</div>
+    <div class="ap" onclick="quickAsk('空腹血糖7.8，偏高了，我该注意什么？')">血糖偏高？</div>
+    <div class="ap" onclick="quickAsk('服用降压药期间有什么饮食禁忌？')">饮食禁忌？</div>
+    <div class="ap" onclick="quickAsk('低血糖发作了应该怎么紧急处理？')">低血糖急救？</div>
+    <div class="ap" onclick="quickAsk('格列美脲片快断药了，怎么申请线上续方？')">如何续方？</div>
+  </div>
+
+  <div class="cwin" id="cwin">
+    <div class="msg a">
+      <div class="msndr">AI助手</div>
+      <div class="mb">您好，张先生！👋<br><br>我已了解您的用药方案：<br>• 二甲双胍片 500mg（早午餐后）<br>• 苯磺酸氨氯地平 5mg（早餐后）<br>• 格列美脲片 1mg（晚餐前）⚠ 剩7天<br>• 阿托伐他汀钙片 20mg（晚餐后）<br><br>格列美脲片库存告急，建议尽快续方！有任何用药问题随时问我 🙂</div>
+      <div class="mt2">刚刚</div>
+    </div>
+  </div>
+
+  <div class="ci-row">
+    <textarea class="cinp" id="cinp" placeholder="输入用药问题…" rows="1"></textarea>
+    <button class="sbtn" id="sbtn" onclick="sendMsg()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+  <div class="disc">⚠ AI 回答仅供参考，不构成医疗建议，具体用药请遵医嘱。</div>
+</div>
+
+</div><!-- /content -->
+
+<!-- FAB -->
+<button class="fab" id="fab" onclick="openAddModal()" style="display:none">+</button>
+
+<!-- Add Mod Modal -->
+<div class="mbk" id="modal-add">
+  <div class="msh">
+    <div class="mhd"></div>
+    <div class="mt-m">➕ 添加新药品</div>
+    <div class="fg"><label class="fl">药品通用名</label><input class="fi" id="f-name" placeholder="如：二甲双胍片"></div>
+    <div class="fg"><label class="fl">治疗病种</label><input class="fi" id="f-disease" placeholder="如：高血压、2型糖尿病"></div>
+    <div class="f2">
+      <div class="fg"><label class="fl">单次剂量</label><input class="fi" id="f-dose" placeholder="如：500mg"></div>
+      <div class="fg"><label class="fl">每日次数</label><select class="fi" id="f-freq"><option>每日1次</option><option selected>每日2次</option><option>每日3次</option><option>隔日1次</option></select></div>
+    </div>
+    <div class="f2">
+      <div class="fg"><label class="fl">服药时间</label><select class="fi"><option>餐前</option><option selected>餐后</option><option>空腹</option><option>随餐</option><option>睡前</option></select></div>
+      <div class="fg"><label class="fl">库存数量（片）</label><input class="fi" id="f-stock" type="number" placeholder="如：60"></div>
+    </div>
+    <div class="fg"><label class="fl">注意事项（选填）</label><input class="fi" id="f-note" placeholder="如：不可与酒精同服"></div>
+    <button class="bmain" onclick="saveMed()">保存药品</button>
+    <button class="bcancel" onclick="closeModal('modal-add')">取消</button>
+  </div>
+</div>
+
+<!-- Buy Modal -->
+<div class="mbk" id="modal-buy">
+  <div class="msh">
+    <div class="mhd"></div>
+    <div class="mt-m">🛒 美团买药</div>
+    <div class="mt-badge">🟠 美团买药 · 极速到家</div>
+    <div class="med-note" id="buy-dup-guard" style="margin-bottom:10px"></div>
+    <div id="buy-modal-body"></div>
+    <div class="mt-note">⚠ 处方药购买需上传有效处方，请提前准备医生处方单。<br>配送时效以实际为准，最快 30 分钟。</div>
+    <button class="bmain" style="background:var(--mt)" id="buy-confirm-btn">跳转美团买药</button>
+    <button class="bcancel" onclick="closeModal('modal-buy')">取消</button>
+  </div>
+</div>
+
+<!-- Missed Dose Modal -->
+<div class="mbk" id="modal-missed">
+  <div class="msh">
+    <div class="mhd"></div>
+    <div class="mt-m" id="miss-title">漏服处理建议</div>
+    <div class="miss-advice" id="miss-advice"></div>
+    <div class="miss-opts" id="miss-opts"></div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bnav">
+  <button class="nb on" onclick="goTab('today',0)"><div class="ni"><svg viewBox="0 0 22 22"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="12" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="12" width="7" height="7" rx="1.5"/><rect x="12" y="12" width="7" height="7" rx="1.5"/></svg></div><div class="nlbl">今日</div></button>
+  <button class="nb" onclick="goTab('meds',1)"><div class="ni"><svg viewBox="0 0 22 22"><path d="M9 3H5a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z"/><path d="M9 3v6h6M7 13h8M7 17h5"/></svg></div><div class="nlbl">药单</div></button>
+  <button class="nb" onclick="goTab('remind',2)"><div class="ni"><svg viewBox="0 0 22 22"><path d="M18 8A7 7 0 104 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><div class="nlbl">提醒</div></button>
+  <button class="nb" onclick="goTab('records',3)"><div class="ni"><svg viewBox="0 0 22 22"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-4"/></svg></div><div class="nlbl">记录</div></button>
+  <button class="nb" onclick="goTab('ai',4)"><div class="ni"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="8"/><path d="M8 10h.01M11 10h.01M14 10h.01"/><path d="M8 14s1 1.5 3 1.5 3-1.5 3-1.5"/></svg></div><div class="nlbl">AI助手</div></button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Config ───
+const TABS=['today','meds','remind','records','ai'];
+const TOTAL=5;
+let taken=0, missedCount=0;
+let chatHistory=[];
+let calOffset=0; // months from current
+
+// ─── Med state: null=pending, true=taken, false=missed ───
+const medState={m1:null,m2:null,m3:null,m4:null,m5:null};
+const medNames={m1:'二甲双胍片（早）',m2:'苯磺酸氨氯地平',m3:'二甲双胍片（午）',m4:'格列美脲片',m5:'阿托伐他汀钙片'};
+const missAdvice={
+  m1:'二甲双胍半衰期约6小时。若距下次服药 >3小时，可立即补服；若已接近下次服药时间，跳过本次即可。不会引起低血糖，偶尔漏服影响较小。',
+  m2:'苯磺酸氨氯地平半衰期约35小时，当天发现可补服；次日发现则正常服用当天量即可。切勿一次补服双倍剂量，以免血压骤降。',
+  m3:'同二甲双胍早餐处理原则。若距晚饭时间较远可补服，否则跳过本次，按时服用晚间药物。',
+  m4:'⚠ 格列美脲属磺脲类，漏服后血糖可能升高。若餐后不足1小时发现，可补服；若已过较长时间，跳过本次并监测血糖，不可补服以免低血糖！随身携带糖果。',
+  m5:'阿托伐他汀半衰期约14小时，当天发现可补服；若次日才发现，正常服当天量即可，无需补服。不影响整体疗效。'
+};
+
+// ─── Daily tips ───
+const TIPS=[
+  '服用格列美脲片时，建议随身携带糖果或含糖饮料，以备低血糖急救。',
+  '二甲双胍若出现胃肠不适，可尝试改为餐中服用，与食物同服可减轻刺激。',
+  '高血压患者建议每天同一时间测量血压，记录晨起未服药前的血压更准确。',
+  '服用他汀类药物期间，避免大量饮用西柚汁，可能影响药物代谢导致副作用增加。',
+  '规律运动有助于降低血糖和血压。每日步行30分钟，对"三高"管理大有裨益。',
+  '低钠饮食对降压效果显著。建议每日食盐摄入不超过5g，约一瓶盖。',
+  '血糖控制良好的标志：空腹4.4-7.0 mmol/L，餐后两小时 <10 mmol/L。',
+  '长期规律服药是慢性病控制的基础，切勿因症状好转而自行停药。',
+  '保持良好睡眠（7-8小时）有助于稳定血糖，睡眠不足会导致血糖波动加大。',
+  '情绪波动可引起血压和血糖升高，保持心情平稳对慢病管理同样重要。'
+];
+
+const STORAGE_KEY='med_manager_v4_state';
+const DAY_MS=24*60*60*1000;
+const REVISIT_PLAN={
+  main:{title:'糖尿病科复诊',doctor:'李主任',status:'已预约',date:'2026-05-01T09:00:00+08:00'},
+  second:{title:'心内科定期检查',doctor:'王主任',status:'待预约',date:'2026-05-20T14:00:00+08:00'}
+};
+const STOCK_PLAN={
+  '格列美脲片':{id:'m4',stockPills:7,dailyDose:1,reorderLead:10},
+  '阿托伐他汀钙片':{id:'m5',stockPills:13,dailyDose:1,reorderLead:14}
+};
+const DEFAULT_TOGGLES={
+  dose_push:true,
+  missed_recovery:true,
+  family_escalation:false,
+  stock_low:true,
+  revisit_push:true,
+  buy_shortcut:true
+};
+const DEFAULT_LAST_ORDERS={'格列美脲片':'2026-04-18','阿托伐他汀钙片':'2026-04-12'};
+let uiState={toggles:{...DEFAULT_TOGGLES},lastOrders:{...DEFAULT_LAST_ORDERS},healthLoggedDate:''};
+let latestTopRisk={name:'格列美脲片',days:7};
+let nextStepAction='dose';
+const MED_PLAN_ORDER=['m1','m2','m3','m4','m5'];
+const MED_PLAN_TIME={m1:'07:30',m2:'07:30',m3:'12:00',m4:'18:30',m5:'18:30'};
+const calData={}; // key: YYYY-MM-DD, val: 'ok'|'miss'|'partial'
+let calYear, calMonth;
+let calSelectedKey='';
+
+function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function daysUntil(dateLike){
+  const today=startOfDay(new Date());
+  const target=startOfDay(new Date(dateLike));
+  return Math.ceil((target-today)/DAY_MS);
+}
+function addDays(date,days){
+  const x=new Date(date);
+  x.setDate(x.getDate()+days);
+  return x;
+}
+function formatMD(dateLike){
+  const d=new Date(dateLike);
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+function formatMDWeekTime(dateLike){
+  const d=new Date(dateLike);
+  const W=['周日','周一','周二','周三','周四','周五','周六'];
+  return `${d.getMonth()+1}月${d.getDate()}日（${W[d.getDay()]}）· ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function coverageDays(name){
+  const p=STOCK_PLAN[name];
+  if(!p)return 0;
+  return Math.max(0,Math.floor(p.stockPills/p.dailyDose));
+}
+function getStockLevel(days){
+  if(days<=7)return 'urgent';
+  if(days<=14)return 'soon';
+  return 'ok';
+}
+function setBadge(el,level,text){
+  el.classList.remove('urgent','soon','ok');
+  el.classList.add(level==='urgent'?'urgent':level==='soon'?'soon':'ok');
+  el.textContent=text;
+}
+function syncCounts(){
+  taken=Object.values(medState).filter(v=>v===true).length;
+  missedCount=Object.values(medState).filter(v=>v===false).length;
+}
+function saveState(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify({
+    medState,
+    toggles:uiState.toggles,
+    lastOrders:uiState.lastOrders,
+    healthLoggedDate:uiState.healthLoggedDate,
+    calData,
+    chatHistory
+  }));
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw){syncCounts();return;}
+    const saved=JSON.parse(raw);
+    if(saved?.medState){
+      Object.keys(medState).forEach(k=>{
+        if([null,true,false].includes(saved.medState[k]))medState[k]=saved.medState[k];
+      });
+    }
+    uiState.toggles={...DEFAULT_TOGGLES,...(saved?.toggles||{})};
+    uiState.lastOrders={...DEFAULT_LAST_ORDERS,...(saved?.lastOrders||{})};
+    uiState.healthLoggedDate=saved?.healthLoggedDate||'';
+    if(saved?.calData&&typeof saved.calData==='object'){
+      Object.keys(saved.calData).forEach(k=>{
+        if(['ok','miss','partial'].includes(saved.calData[k]))calData[k]=saved.calData[k];
+      });
+    }
+    if(Array.isArray(saved?.chatHistory))chatHistory=saved.chatHistory;
+  }catch(e){}
+  syncCounts();
+}
+function renderDoseRow(id){
+  const row=document.getElementById('mr-'+id);
+  const tk=document.getElementById('tk-'+id);
+  const ms=document.getElementById('ms-'+id);
+  if(!row||!tk||!ms)return;
+  const s=medState[id];
+  row.classList.toggle('taken',s===true);
+  row.classList.toggle('missed',s===false);
+  tk.classList.toggle('done',s===true);
+  ms.classList.toggle('done',s===false);
+}
+function renderAllDoseRows(){Object.keys(medState).forEach(renderDoseRow);}
+function toggleSwitch(el){
+  const key=el.dataset.key;
+  if(!key)return;
+  el.classList.toggle('off');
+  uiState.toggles[key]=!el.classList.contains('off');
+  saveState();
+}
+function renderToggles(){
+  document.querySelectorAll('.tsw[data-key]').forEach(sw=>{
+    const on=uiState.toggles[sw.dataset.key]!==false;
+    sw.classList.toggle('off',!on);
+  });
+}
+function setTaskState(id,state,title,subtitle){
+  const card=document.getElementById(id+'-item');
+  const sub=document.getElementById(id+'-sub');
+  if(!card||!sub)return;
+  card.classList.remove('ok','warn','urgent');
+  card.classList.add(state);
+  sub.textContent=subtitle;
+  if(title){
+    const key=card.querySelector('.focus-k');
+    if(key)key.textContent=title;
+  }
+}
+function getTodayISO(){return new Date().toISOString().slice(0,10);}
+function formatYMD(dateLike){
+  const d=new Date(dateLike);
+  const W=['周日','周一','周二','周三','周四','周五','周六'];
+  return `${d.getMonth()+1}月${d.getDate()}日（${W[d.getDay()]}）`;
+}
+function seedCalendarData(){
+  const now=new Date();
+  const y=now.getFullYear(),m=now.getMonth();
+  const states=['ok','ok','ok','partial','ok','miss','ok','ok','ok','ok','partial','ok','ok','ok','miss','ok','ok','ok','ok','ok','ok','partial','ok','ok','ok'];
+  for(let d=1;d<=now.getDate()-1;d++){
+    const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if(!calData[key])calData[key]=states[(d-1)%states.length];
+  }
+}
+function renderTodayFocus(){
+  const pending=Math.max(0,TOTAL-taken-missedCount);
+  const doneDose=pending===0;
+  const loggedToday=uiState.healthLoggedDate===getTodayISO();
+  const renewDone=latestTopRisk.days>14;
+  const doneCount=[doneDose,loggedToday,renewDone].filter(Boolean).length;
+  document.getElementById('focus-progress').textContent=`${doneCount}/3 完成`;
+
+  if(doneDose){
+    setTaskState('task-dose','ok',null,'今日用药已完成');
+  }else{
+    const nextId=MED_PLAN_ORDER.find(id=>medState[id]===null);
+    const nextTime=nextId?MED_PLAN_TIME[nextId]:'今天';
+    setTaskState('task-dose',pending>=3?'urgent':'warn',null,`还有 ${pending} 次待服，下一次约 ${nextTime}`);
+  }
+
+  if(loggedToday){
+    setTaskState('task-health','ok',null,'今日已录入健康指标');
+  }else{
+    setTaskState('task-health','warn',null,'建议录入血压/血糖，方便复诊评估');
+  }
+
+  if(renewDone){
+    setTaskState('task-renew','ok',null,`${latestTopRisk.name}库存较充足，可按计划处理`);
+  }else{
+    const lv=latestTopRisk.days<=7?'urgent':'warn';
+    setTaskState('task-renew',lv,null,`优先处理 ${latestTopRisk.name}，预计剩余 ${latestTopRisk.days} 天`);
+  }
+
+  const mainBtn=document.getElementById('focus-main-btn');
+  if(!doneDose){
+    nextStepAction='dose';
+    mainBtn.textContent='去完成下一次用药';
+  }else if(!loggedToday){
+    nextStepAction='health';
+    mainBtn.textContent='去录入今日健康指标';
+  }else if(!renewDone){
+    nextStepAction='renew';
+    mainBtn.textContent='去处理续方购药';
+  }else{
+    nextStepAction='review';
+    mainBtn.textContent='去查看本周记录';
+  }
+}
+function followNextStep(){
+  if(nextStepAction==='dose'){
+    goTab('today',0);
+    showToast('💊 请先完成下一次待服药打卡');
+    return;
+  }
+  if(nextStepAction==='health'){
+    goTab('records',3);
+    setTimeout(()=>document.getElementById('bp-s')?.focus(),280);
+    return;
+  }
+  if(nextStepAction==='renew'){
+    goTab('remind',2);
+    setTimeout(()=>startRenewFlow(),280);
+    return;
+  }
+  goTab('records',3);
+}
+function startRenewFlow(){
+  showToast(`🧭 正在按建议处理：${latestTopRisk.name}`);
+  setTimeout(()=>openBuyModal(latestTopRisk.name),320);
+}
+function renderCarePlanUI(){
+  const mainDays=daysUntil(REVISIT_PLAN.main.date);
+  const secondDays=daysUntil(REVISIT_PLAN.second.date);
+  const mainMeta=`${formatMDWeekTime(REVISIT_PLAN.main.date)} · ${REVISIT_PLAN.main.doctor} · ${REVISIT_PLAN.main.status}`;
+  const secondMeta=`${formatMDWeekTime(REVISIT_PLAN.second.date)} · ${REVISIT_PLAN.second.doctor} · ${REVISIT_PLAN.second.status}`;
+  document.getElementById('rv-main-meta').textContent=mainMeta;
+  document.getElementById('rv-second-meta').textContent=secondMeta;
+  setBadge(
+    document.getElementById('rv-main-badge'),
+    mainDays<=0?'urgent':mainDays<=7?'soon':'ok',
+    mainDays<=0?'已到期':`${mainDays}天后`
+  );
+  setBadge(
+    document.getElementById('rv-second-badge'),
+    secondDays<=0?'urgent':secondDays<=7?'soon':'ok',
+    secondDays<=0?'已到期':`${secondDays}天后`
+  );
+
+  const entries=Object.keys(STOCK_PLAN).map(name=>{
+    const days=coverageDays(name);
+    return {name,days,level:getStockLevel(days),breakDate:addDays(new Date(),days)};
+  }).sort((a,b)=>a.days-b.days);
+  const topRisk=entries[0];
+  latestTopRisk={name:topRisk.name,days:topRisk.days};
+
+  document.getElementById('today-stock-alert-title').textContent=`${topRisk.name}库存${topRisk.days<=3?'极低':'告急'}`;
+  document.getElementById('today-stock-alert-sub').textContent=`预计还可用 ${topRisk.days} 天，建议在 ${formatMD(addDays(new Date(),Math.max(topRisk.days-2,0)))} 前完成续方`;
+  document.getElementById('today-revisit-alert-sub').textContent=mainDays<=0
+    ?`${REVISIT_PLAN.main.title}已到期，请尽快补约`
+    :`距${formatMD(new Date(REVISIT_PLAN.main.date))}${REVISIT_PLAN.main.title}还有 ${mainDays} 天`;
+
+  const actionTitle=document.getElementById('renew-action-title');
+  const actionSub=document.getElementById('renew-action-sub');
+  actionTitle.textContent=`续方优先级：${topRisk.name}`;
+  actionSub.textContent=topRisk.days<=7
+    ?`高风险断药窗口（剩余${topRisk.days}天），建议今天先发起线上续方`
+    :`库存可覆盖${topRisk.days}天，建议在复诊时同步处理续方`;
+
+  const m4Days=coverageDays('格列美脲片');
+  const m5Days=coverageDays('阿托伐他汀钙片');
+  const m4Level=getStockLevel(m4Days);
+  const m5Level=getStockLevel(m5Days);
+  document.getElementById('buy-stock-tag-m4').textContent=`⚠ 仅剩${m4Days}天`;
+  document.getElementById('buy-stock-tag-m4').className=`bi-stock ${m4Level==='urgent'?'low':'warn'}`;
+  document.getElementById('buy-stock-tag-m5').textContent=`余${m5Days}天`;
+  document.getElementById('buy-stock-tag-m5').className=`bi-stock ${m5Level==='ok'?'warn':m5Level==='urgent'?'low':'warn'}`;
+  document.getElementById('stock-text-m4').textContent=`⚠ 仅剩${m4Days}天`;
+  document.getElementById('stock-text-m5').textContent=`剩余约${m5Days}天`;
+  document.getElementById('med-note-m4').textContent=`🔴 库存告急！预计${formatMD(addDays(new Date(),m4Days))}断药，切勿自行停药。`;
+  const m4Fill=document.getElementById('fill-m4');
+  const m5Fill=document.getElementById('fill-m5');
+  m4Fill.style.width=`${Math.max(8,Math.min(100,Math.round(m4Days/45*100)))}%`;
+  m5Fill.style.width=`${Math.max(8,Math.min(100,Math.round(m5Days/45*100)))}%`;
+  m4Fill.className=`sfill ${m4Level==='urgent'?'low':m4Level==='soon'?'warn':'ok'}`;
+  m5Fill.className=`sfill ${m5Level==='urgent'?'low':m5Level==='soon'?'warn':'ok'}`;
+
+  document.getElementById('renew-meta-m4').textContent=`预计断药：${formatMD(addDays(new Date(),m4Days))} · 仅剩${m4Days}天 · ${m4Days<=7?'极度紧急':'需尽快续方'}`;
+  document.getElementById('renew-meta-m5').textContent=`预计断药：${formatMD(addDays(new Date(),m5Days))} · 剩余${m5Days}天 · ${m5Days<=14?'建议提前续方':'可在下次复诊时处理'}`;
+  setBadge(document.getElementById('renew-badge-m4'),m4Level,m4Days<=7?'紧急':`${m4Days}天后`);
+  setBadge(document.getElementById('renew-badge-m5'),m5Level,m5Days<=14?`${m5Days}天后`:'充足');
+
+  document.getElementById('renew-decision-title').textContent=`优先处理：${topRisk.name}（剩余${topRisk.days}天）`;
+  document.getElementById('renew-decision-meta').textContent=topRisk.days<=7
+    ?`建议先线上复诊开方，再完成购药，避免断药`
+    :`建议在${formatMD(REVISIT_PLAN.main.date)}复诊时同步完成续方购药`;
+  setBadge(document.getElementById('renew-decision-badge'),topRisk.days<=7?'urgent':'soon',topRisk.days<=7?'立即处理':'本周处理');
+  const renewMainBtn=document.getElementById('renew-main-btn');
+  if(renewMainBtn){
+    renewMainBtn.textContent=topRisk.days<=7?`立即处理 ${topRisk.name}`:`按建议处理 ${topRisk.name}`;
+  }
+  renderTodayFocus();
+}
+
+// ─── Init ───
+(function(){
+  const now=new Date();
+  const D=['周日','周一','周二','周三','周四','周五','周六'];
+  document.getElementById('today-date').textContent=
+    `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 · ${D[now.getDay()]}`;
+  const h=now.getHours();
+  const g=h<5?'夜深了，':h<11?'早上好，':h<13?'中午好，':h<18?'下午好，':'晚上好，';
+  document.getElementById('hero-greet').textContent=g+'张先生 👋';
+  document.getElementById('tip-text').textContent=TIPS[Math.floor(Math.random()*TIPS.length)];
+  loadState();
+  seedCalendarData();
+  renderAllDoseRows();
+  renderToggles();
+  renderCarePlanUI();
+  drawAdhChart('week');
+  drawBPChart();
+  drawCalendar();
+  updateProg();
+})();
+
+// ─── Tab ───
+function goTab(id,idx){
+  TABS.forEach(t=>document.getElementById('tab-'+t).classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',i===idx));
+  document.querySelectorAll('.bnav .nb').forEach((b,i)=>b.classList.toggle('on',i===idx));
+  document.getElementById('fab').style.display=(id==='meds')?'flex':'none';
+}
+
+// ─── Med actions — FIXED dual-button logic ───
+function markTaken(id){
+  const prev=medState[id];
+  medState[id]=prev===true?null:true;
+  renderDoseRow(id);
+  syncCounts();
+  updateProg();
+  saveState();
+  if(prev===true){
+    showToast('↩ 已撤销打卡');
+    return;
+  }
+  const btn=document.getElementById('tk-'+id);
+  btn.classList.add('pop');
+  setTimeout(()=>btn.classList.remove('pop'),320);
+  addLog(medNames[id],prev===false?'补服':'已服','var(--teal)','var(--tl)','var(--td)',prev===false?'补服':'正常');
+  showToast(prev===false?'✓ 已记录补服':'✓ 已记录服药打卡');
+}
+
+function markMissPrompt(id){
+  document.getElementById('miss-title').textContent=medNames[id]+' — 漏服处理';
+  document.getElementById('miss-advice').innerHTML=missAdvice[id].replace(/⚠/g,'⚠️');
+  document.getElementById('miss-opts').innerHTML=`
+    <button class="miss-opt take-now" onclick="doTakeNow('${id}')">✅ 现在补服（按时服药）</button>
+    <button class="miss-opt rec-miss" onclick="doMarkMiss('${id}')">❌ 确认漏服（记录在案）</button>
+    <button class="miss-opt later" onclick="closeModal('modal-missed')">稍后决定</button>`;
+  document.getElementById('modal-missed').classList.add('open');
+}
+
+function doTakeNow(id){
+  closeModal('modal-missed');
+  const prev=medState[id];
+  medState[id]=true;
+  renderDoseRow(id);
+  syncCounts();
+  updateProg();
+  saveState();
+  const btn=document.getElementById('tk-'+id);
+  btn.classList.add('pop');
+  setTimeout(()=>btn.classList.remove('pop'),320);
+  if(prev!==true)addLog(medNames[id],'补服','var(--teal)','var(--tl)','var(--td)','补服');
+  showToast('✓ 已记录补服');
+}
+
+function doMarkMiss(id){
+  closeModal('modal-missed');
+  const prev=medState[id];
+  medState[id]=false;
+  renderDoseRow(id);
+  syncCounts();
+  updateProg();
+  saveState();
+  if(prev!==false)addLog(medNames[id],'漏服','var(--amber)','var(--al)','#92400E','漏服');
+  showToast('📋 已记录漏服，请注意下次按时服药');
+}
+
+function updateProg(){
+  syncCounts();
+  const pct=Math.round((taken/TOTAL)*100);
+  document.getElementById('ppct').textContent=pct+'%';
+  document.getElementById('cnt-ok').textContent=taken;
+  document.getElementById('cnt-nd').textContent=Math.max(0,TOTAL-taken-missedCount);
+  const c=150.8;
+  document.getElementById('pring').style.strokeDashoffset=c-(c*pct/100);
+  document.getElementById('al-done').style.display=(taken===TOTAL)?'flex':'none';
+  renderTodayFocus();
+}
+
+function addLog(name,action,dot,bg,color,tag){
+  const now=new Date();
+  const ts=`今日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const html=`<div class="hr"><div class="hd" style="background:${dot}"></div><div class="hb"><span>${name} ${action}</span><span class="htg" style="background:${bg};color:${color}">${tag}</span></div><div class="ht">${ts}</div></div>`;
+  document.getElementById('log-list').insertAdjacentHTML('afterbegin',html);
+}
+
+// ─── Charts ───
+function drawAdhChart(period){
+  const wData=[{d:'周六',v:100},{d:'周日',v:80},{d:'周一',v:100},{d:'周二',v:60},{d:'周三',v:100},{d:'周四',v:100},{d:'今日',v:40}];
+  const mData=[90,80,85,95,70,88,92,60,100,95,85,78,90,80,72,88,95,90,82,100,70,86,90,78,85,88,95,80,75,40].map((v,i)=>({d:`${i+1}日`,v}));
+  const data=(period==='month')?mData:wData;
+  const el=document.getElementById('adh-chart');
+  const H=58;
+  el.innerHTML=data.map(item=>{
+    const c=item.v>=80?'#0F9B77':item.v>=60?'#D97706':'#DC2626';
+    const today=item.d==='今日'||item.d==='40日';
+    return `<div class="bw"><div class="bv" style="color:${c}">${item.v}%</div><div class="bbar" style="height:${Math.round(item.v/100*H)}px;background:${c};opacity:${today?1:.55}"></div><div class="bl" style="font-size:${period==='month'?'7px':'8px'}">${period==='month'?'':item.d}</div></div>`;
+  }).join('');
+}
+
+// ─── SVG Line Chart for BP ───
+function drawBPChart(){
+  const sys=[124,128,122,130,118,126,121];
+  const dia=[78,82,76,84,75,80,77];
+  const labels=['周六','周日','周一','周二','周三','周四','今日'];
+  const svg=document.getElementById('bp-svg');
+  const W=350,H=82,padX=18,padY=8,chartH=H-padY*2,chartW=W-padX*2;
+  const allVals=[...sys,...dia];
+  const minV=Math.min(...allVals)-5;
+  const maxV=Math.max(...allVals)+5;
+  const xStep=chartW/(sys.length-1);
+  const yScale=(v)=>padY+chartH-(v-minV)/(maxV-minV)*chartH;
+  const pts=(arr)=>arr.map((v,i)=>`${padX+i*xStep},${yScale(v).toFixed(1)}`).join(' ');
+  const dots=(arr,color)=>arr.map((v,i)=>`<circle cx="${(padX+i*xStep).toFixed(1)}" cy="${yScale(v).toFixed(1)}" r="3" fill="${color}" stroke="#fff" stroke-width="1.5"/>`).join('');
+  const xlabels=labels.map((l,i)=>`<text x="${(padX+i*xStep).toFixed(1)}" y="${H-1}" text-anchor="middle" font-size="8" fill="#9CA3AF">${l}</text>`).join('');
+  // Normal upper limit lines
+  const syNorm=yScale(130).toFixed(1);
+  const diNorm=yScale(85).toFixed(1);
+  svg.innerHTML=`
+    <line x1="${padX}" y1="${syNorm}" x2="${W-padX}" y2="${syNorm}" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="${padX}" y1="${diNorm}" x2="${W-padX}" y2="${diNorm}" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="${W-padX+2}" y="${parseFloat(syNorm)+3}" font-size="7" fill="#D1D5DB">130</text>
+    <text x="${W-padX+2}" y="${parseFloat(diNorm)+3}" font-size="7" fill="#D1D5DB">85</text>
+    <polyline points="${pts(sys)}" fill="none" stroke="#DC2626" stroke-width="2" stroke-dasharray="5,3" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="${pts(dia)}" fill="none" stroke="#1D6FB4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    ${dots(sys,'#DC2626')}${dots(dia,'#1D6FB4')}
+    ${sys.map((v,i)=>`<text x="${(padX+i*xStep).toFixed(1)}" y="${(yScale(v)-5).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="#DC2626" font-weight="500">${v}</text>`).join('')}
+    ${dia.map((v,i)=>`<text x="${(padX+i*xStep).toFixed(1)}" y="${(yScale(v)+10).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="#1D6FB4" font-weight="500">${v}</text>`).join('')}
+    ${xlabels}`;
+}
+
+function setPeriod(btn,p){
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  drawAdhChart(p);
+}
+
+// ─── Calendar ───
+function drawCalendar(){
+  const now=new Date();
+  const base=new Date(now.getFullYear(),now.getMonth()+calOffset,1);
+  calYear=base.getFullYear();calMonth=base.getMonth();
+  document.getElementById('cal-month').textContent=`${calYear}年${calMonth+1}月`;
+  const firstDay=(new Date(calYear,calMonth,1).getDay());
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=startOfDay(new Date());
+  const todayKey=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  if(!calSelectedKey){
+    calSelectedKey=todayKey;
+  }else{
+    const [sy,sm]=calSelectedKey.split('-');
+    const inMonth=(+sy===calYear&&+sm===calMonth+1);
+    if(!inMonth){
+      calSelectedKey=todayKey.startsWith(`${calYear}-${String(calMonth+1).padStart(2,'0')}`)?todayKey:`${calYear}-${String(calMonth+1).padStart(2,'0')}-01`;
+    }
+  }
+  const grid=document.getElementById('cal-grid');
+  const hdrs=['日','一','二','三','四','五','六'];
+  let html=hdrs.map(h=>`<div class="cal-day-hd">${h}</div>`).join('');
+  for(let i=0;i<firstDay;i++) html+=`<div class="cal-day empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=key===todayKey;
+    const isFuture=startOfDay(new Date(calYear,calMonth,d))>today;
+    const state=calData[key];
+    let cls='cal-day';
+    if(isFuture) cls+=' future';
+    else if(state==='ok') cls+=' ok';
+    else if(state==='miss') cls+=' miss';
+    else if(state==='partial') cls+=' partial';
+    else cls+=' partial';
+    if(!isFuture) cls+=' clickable';
+    if(isToday) cls+=' today';
+    if(key===calSelectedKey) cls+=' selected';
+    const clickAttr=!isFuture?`onclick="selectCalendarDay('${key}')"`:'';
+    html+=`<div class="${cls}" ${clickAttr}>${d}</div>`;
+  }
+  grid.innerHTML=html;
+  renderCalendarDetail(calSelectedKey);
+}
+function getCalStatusText(state){
+  if(state==='ok')return '全勤（当日用药完成）';
+  if(state==='miss')return '漏服（需重点关注）';
+  return '部分完成（仍可补充记录）';
+}
+function renderCalendarDetail(key){
+  const title=document.getElementById('cal-detail-title');
+  const status=document.getElementById('cal-detail-status');
+  if(!key||!title||!status)return;
+  const state=calData[key]||'partial';
+  const isFuture=startOfDay(new Date(key))>startOfDay(new Date());
+  title.textContent=`${formatYMD(key)} · 打卡详情`;
+  status.textContent=isFuture?'未来日期暂不支持打卡记录':getCalStatusText(state);
+}
+function selectCalendarDay(key){
+  calSelectedKey=key;
+  drawCalendar();
+}
+function markSelectedCalendar(state){
+  if(!calSelectedKey)return;
+  const isFuture=startOfDay(new Date(calSelectedKey))>startOfDay(new Date());
+  if(isFuture){
+    showToast('📅 未来日期暂不支持标记');
+    return;
+  }
+  calData[calSelectedKey]=state;
+  saveState();
+  drawCalendar();
+  const text=state==='ok'?'全勤':state==='miss'?'漏服':'部分';
+  showToast(`✅ 已将${formatMD(calSelectedKey)}标记为${text}`);
+}
+function shiftMonth(dir){calOffset+=dir;drawCalendar();}
+function jumpToCurrentMonth(){
+  calOffset=0;
+  calSelectedKey=getTodayISO();
+  drawCalendar();
+}
+
+// ─── Health save (联动今日洞察) ───
+function saveHealth(){
+  const s=document.getElementById('bp-s').value;
+  const d=document.getElementById('bp-d').value;
+  const g=document.getElementById('glu').value;
+  if(!s&&!d&&!g){showToast('⚠ 请至少填写一项');return;}
+  const now=new Date();
+  const ts=`今日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  if(s&&d){
+    const ok=(+s<130&&+d<85);
+    // Update insight card
+    document.getElementById('ic-bp').innerHTML=`${s}<span style="font-size:11px;font-weight:400">/${d}</span>`;
+    const bpChip=document.getElementById('ic-bp-chip');
+    bpChip.textContent=ok?'正常':'偏高';
+    bpChip.className='ic-chip '+(ok?'ok':'hi');
+    document.getElementById('ic-bp').style.color=ok?'var(--teal)':'var(--red)';
+    addLog(`血压 ${s}/${d}mmHg`,'已记录','var(--teal)','var(--tl)','var(--td)',ok?'正常':'偏高');
+  }
+  if(g){
+    const ok=(+g>=3.9&&+g<=7.0);
+    document.getElementById('ic-glu').textContent=g;
+    const gChip=document.getElementById('ic-glu-chip');
+    gChip.textContent=ok?'正常':(+g>7?'偏高':'偏低');
+    gChip.className='ic-chip '+(ok?'ok':+g>7?'warn':'hi');
+    document.getElementById('ic-glu').style.color=ok?'var(--teal)':+g>7?'var(--amber)':'var(--red)';
+    addLog(`血糖 ${g} mmol/L`,'已记录',ok?'var(--teal)':'var(--amber)',ok?'var(--tl)':'var(--al)',ok?'var(--td)':'#92400E',ok?'正常':+g>7?'偏高':'偏低');
+  }
+  uiState.healthLoggedDate=getTodayISO();
+  saveState();
+  renderTodayFocus();
+  ['bp-s','bp-d','glu','wt'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  showToast('✓ 指标已保存，今日洞察已更新');
+}
+
+// ─── Search ───
+function searchMeds(q){
+  const t=q.trim().toLowerCase();
+  document.querySelectorAll('#meds-list .med-card').forEach(c=>{
+    c.style.display=(!t||c.dataset.name.toLowerCase().includes(t))?'':'none';
+  });
+  document.getElementById('meds-label').textContent=t?`搜索"${q}"的结果`:'当前用药 · 4种';
+}
+
+function toggleDetail(btn){
+  const p=btn.closest('.med-card').querySelector('.mc-detail-panel');
+  const open=p.classList.toggle('open');
+  btn.textContent=open?'📋 收起详情':'📋 药品详情';
+}
+
+// ─── Modals ───
+function openAddModal(){document.getElementById('modal-add').classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+['modal-add','modal-buy','modal-missed'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
+});
+
+function saveMed(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){showToast('⚠ 请填写药品名称');return;}
+  showToast('✓ 已添加：'+name);
+  closeModal('modal-add');
+  ['f-name','f-disease','f-dose','f-stock','f-note'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+}
+
+// ─── 美团买药 ───
+const MT_WEB='https://maiyao.meituan.com/search?keyword=';
+function buildDrugDetail(name){
+  const days=coverageDays(name);
+  if(days>0)return `预计可用 ${days} 天 · 处方药 · 购买需提供处方`;
+  return '处方药 · 购买需提供处方';
+}
+function renderBuyGuard(drugs){
+  const lines=drugs.map(d=>{
+    const days=coverageDays(d.name);
+    const last=uiState.lastOrders[d.name];
+    const lastText=last?`最近下单：${formatMD(last)}`:'最近下单：暂无记录';
+    const coverText=days>0?`预计可覆盖 ${days} 天`:'覆盖天数待确认';
+    return `• ${d.name}：${lastText}，${coverText}`;
+  });
+  const highCoverage=drugs.some(d=>coverageDays(d.name)>=21);
+  const head=highCoverage?'⚠ 检测到可能重复购买，请先核对在途订单':'🧾 购买前核对（避免重复购买）';
+  document.getElementById('buy-dup-guard').innerHTML=`${head}<br>${lines.join('<br>')}`;
+}
+function openBuyModal(name){
+  const drugs=name?[{name,ico:'#FEF9C3',detail:buildDrugDetail(name)}]:[
+    {name:'格列美脲片',ico:'#FEF9C3',detail:buildDrugDetail('格列美脲片')},
+    {name:'阿托伐他汀钙片',ico:'#EDE9FE',detail:buildDrugDetail('阿托伐他汀钙片')}
+  ];
+  document.getElementById('buy-modal-body').innerHTML=drugs.map(d=>`
+    <div class="bm-item">
+      <div class="bm-ico" style="background:${d.ico}">💊</div>
+      <div style="flex:1"><div class="bm-name">${d.name}</div><div class="bm-detail">${d.detail}</div></div>
+      <button class="mt-buy-btn" onclick="doMeituanJump('${encodeURIComponent(d.name)}')">去购买</button>
+    </div>`).join('');
+  renderBuyGuard(drugs);
+  const isBatch=!name;
+  document.getElementById('buy-confirm-btn').textContent=isBatch?'🛒 一键跳转全部药品':'🛒 跳转美团买药';
+  document.getElementById('buy-confirm-btn').onclick=isBatch
+    ?()=>drugs.forEach((d,i)=>setTimeout(()=>doMeituanJump(encodeURIComponent(d.name)),i*700))
+    :()=>doMeituanJump(encodeURIComponent(drugs[0].name));
+  document.getElementById('modal-buy').classList.add('open');
+}
+
+function buyAllOnMeituan(){openBuyModal(null);}
+
+function doMeituanJump(enc){
+  const medName=decodeURIComponent(enc);
+  if(STOCK_PLAN[medName]){
+    uiState.lastOrders[medName]=new Date().toISOString().slice(0,10);
+    saveState();
+  }
+  const web=MT_WEB+enc;
+  const app='imeituan://drug/search?keyword='+enc;
+  const iframe=document.createElement('iframe');
+  iframe.style.display='none';iframe.src=app;document.body.appendChild(iframe);
+  const t=setTimeout(()=>{window.open(web,'_blank');try{document.body.removeChild(iframe);}catch(e){}},800);
+  window.addEventListener('blur',function f(){clearTimeout(t);try{document.body.removeChild(iframe);}catch(e){}window.removeEventListener('blur',f);},{once:true});
+  closeModal('modal-buy');
+  renderCarePlanUI();
+  showToast('🛒 正在跳转美团买药…');
+}
+
+// ─── AI ───
+function buildAiReply(text){
+  const q=text.toLowerCase().replace(/\s+/g,'');
+  const topRisk=Object.keys(STOCK_PLAN).map(name=>({name,days:coverageDays(name)})).sort((a,b)=>a.days-b.days)[0];
+  const revisitDays=daysUntil(REVISIT_PLAN.main.date);
+  const askDiet=/饮食|忌口|禁忌|吃什么|能吃|不能吃|食物|盐|酒|咖啡|茶|西柚|油腻/.test(q);
+  const askBp=/降压|高血压|氨氯地平|血压/.test(q);
+  const askSugar=/降糖|糖尿病|二甲双胍|格列美脲|血糖/.test(q);
+  const askHypoEmergency=/低血糖|低糖|发作|急救|紧急处理|怎么处理|怎么办|手抖|心慌|出汗/.test(q);
+  const askCoAdmin=/同服|同时服用|一起服用|一起吃|能一起|可以一起|能否同服|可以同服|联用|合用|相互作用/.test(q);
+
+  if(/漏服|忘记|补服/.test(q)){
+    return '如果刚漏服且离下次服药还早，可以按医嘱补服；若已经接近下一次服药时间，通常不建议双倍补服。建议记录本次漏服，并观察是否有不适。如出现头晕、出汗、心慌等症状请及时就医。';
+  }
+  if(askHypoEmergency&&askSugar){
+    return '若怀疑低血糖，可先按“15-15原则”处理：立即补充约15克快速糖（如含糖饮料150ml或葡萄糖片），15分钟后复测或观察症状；若仍不缓解，再补一次。若出现意识不清、抽搐或无法进食，请立即呼叫120，不要强行喂食。缓解后尽快联系医生评估用药与进餐方案。';
+  }
+  if(askCoAdmin){
+    if(/二甲双胍/.test(q)&&/格列美脲/.test(q)){
+      return '二甲双胍和格列美脲在临床上常联合使用，通常可以同服，但要严格按医嘱的剂量和餐前/餐后时间执行。格列美脲有低血糖风险，务必避免漏餐，并留意手抖、心慌、出汗等症状。若近期出现低血糖或进食不规律，建议尽快复诊评估是否需要调整剂量。';
+    }
+    return '是否可以同时服用，需要看具体药名、剂量和服药时间。你当前常见慢病方案一般可联用，但不建议自行增减药或随意改时间。告诉我具体两种药名，我可以给你更准确的用药注意点。';
+  }
+  if(askDiet&&askBp){
+    return '服用降压药期间，饮食重点是“低盐、少酒、规律”：1）每日食盐尽量不超过5g，少吃腌制/重口食物；2）限制饮酒，避免暴饮；3）少油少高糖，控制体重；4）若合并他汀（如阿托伐他汀），注意避免大量西柚汁。若出现头晕乏力或血压波动明显，请尽快复诊。';
+  }
+  if(askDiet&&askSugar){
+    return '降糖药期间建议少精制碳水和含糖饮料，三餐定时定量，不要空腹饮酒；服用格列美脲时尤其要避免漏餐，以免低血糖。若出现心慌、出汗、手抖等低血糖症状，请立即补充糖分并尽快联系医生。';
+  }
+  if(/续方|断药|复诊/.test(q)){
+    return `当前最需要优先处理的是${topRisk.name}（预计剩余${topRisk.days}天）。建议先发起线上复诊续方，再购药，避免治疗中断。糖尿病科复诊预计${revisitDays<=0?'已到期':`还有${revisitDays}天`}。`;
+  }
+  if(/买药|重复|下单/.test(q)){
+    return '下单前建议先核对三项：是否已有在途订单、当前库存还能覆盖几天、是否需要新处方。这样可以避免重复购买和浪费。';
+  }
+  if(/血糖/.test(q)){
+    return '血糖偏高时，先看最近是否有漏服或饮食波动，再连续监测2-3天趋势；如果持续异常，建议提前复诊调整方案。不要自行加药。';
+  }
+  if(/血压/.test(q)){
+    return '建议固定在每天同一时间测量血压并记录趋势。若连续多天偏高或出现头痛胸闷，请尽快联系医生评估用药方案。';
+  }
+  if(/同服|一起吃|相互作用/.test(q)){
+    return '你当前方案中常见联用一般可行，但服药时间和餐前/餐后要严格按医嘱。若新增任何药品或保健品，建议先咨询医生或药师。';
+  }
+  return `我先给你最实用的两步：1）按时完成今天用药；2）优先推进${topRisk.name}续方。你也可以直接问我这几类问题：漏服怎么补、饮食禁忌、能否同服、何时复诊续方。`;
+}
+
+function quickAsk(t){document.getElementById('cinp').value=t;sendMsg();}
+
+function clearChat(){
+  chatHistory=[];
+  saveState();
+  document.getElementById('cwin').innerHTML=`
+    <div class="msg a"><div class="msndr">AI助手</div>
+    <div class="mb">对话已清空。您好，张先生！有什么用药问题随时问我 🙂</div>
+    <div class="mt2">刚刚</div></div>`;
+  showToast('🗑 对话记录已清空');
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('cinp');
+  const text=inp.value.trim();
+  if(!text||document.getElementById('sbtn').disabled)return;
+  inp.value='';inp.style.height='auto';
+  appendMsg('u',text);
+  chatHistory.push({role:'user',content:text});
+  const win=document.getElementById('cwin');
+  const tid='t'+Date.now();
+  win.insertAdjacentHTML('beforeend',`<div class="msg a" id="${tid}"><div class="msndr">AI助手</div><div class="tbub"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div>`);
+  win.scrollTop=win.scrollHeight;
+  document.getElementById('sbtn').disabled=true;
+  await new Promise(resolve=>setTimeout(resolve,620));
+  const reply=buildAiReply(text);
+  document.getElementById(tid).remove();
+  appendMsg('a',reply+' 请以医生诊疗意见为准。');
+  chatHistory.push({role:'assistant',content:reply});
+  saveState();
+  document.getElementById('sbtn').disabled=false;
+  win.scrollTop=win.scrollHeight;
+}
+
+function appendMsg(role,text){
+  const win=document.getElementById('cwin');
+  const now=new Date();
+  const ts=`${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const sndr=role==='a'?'<div class="msndr">AI助手</div>':'';
+  win.insertAdjacentHTML('beforeend',`<div class="msg ${role}">${sndr}<div class="mb">${text.replace(/\n/g,'<br>')}</div><div class="mt2">${ts}</div></div>`);
+  win.scrollTop=win.scrollHeight;
+}
+
+document.getElementById('cinp').addEventListener('input',function(){
+  this.style.height='auto';this.style.height=Math.min(this.scrollHeight,74)+'px';
+});
+document.getElementById('cinp').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}
+});
+
+// ─── Toast ───
+let toastTimer;
+function showToast(msg){
+  clearTimeout(toastTimer);
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+</script>
+</body>
+</html>
