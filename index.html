@@ -22,11 +22,13 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .hdr{background:var(--card);padding:15px 15px 0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.04)}
 .htop{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
 .htitle{font-size:16px;font-weight:700;color:var(--td)}
-.hright{display:flex;align-items:center;gap:7px}
-.hbuy-btn{display:flex;align-items:center;gap:4px;padding:5px 10px;background:var(--mtl);border:1px solid #FFB899;border-radius:20px;font-size:11px;font-weight:500;color:var(--mt);cursor:pointer;transition:all .2s}
+.hright{display:flex;align-items:center;gap:5px}
+.hbuy-btn{display:flex;align-items:center;gap:3px;padding:4px 8px;background:var(--mtl);border:1px solid #FFB899;border-radius:20px;font-size:10px;font-weight:500;color:var(--mt);cursor:pointer;transition:all .2s}
 .hbuy-btn:active{opacity:.8}
-.hguide-btn{display:flex;align-items:center;gap:3px;padding:5px 9px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;font-size:11px;font-weight:500;color:var(--blue);cursor:pointer;transition:all .2s}
+.hguide-btn{display:flex;align-items:center;gap:3px;padding:4px 8px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;font-size:10px;font-weight:500;color:var(--blue);cursor:pointer;transition:all .2s}
 .hguide-btn:active{opacity:.8}
+.hsetup-btn{display:flex;align-items:center;gap:3px;padding:4px 8px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:20px;font-size:10px;font-weight:500;color:#047857;cursor:pointer;transition:all .2s}
+.hsetup-btn:active{opacity:.8}
 .hav{width:30px;height:30px;border-radius:50%;background:var(--tl);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--teal)}
 .tabs{display:flex}
 .tb{flex:1;padding:8px 0;font-size:10.5px;font-weight:400;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:inherit;white-space:nowrap}
@@ -163,6 +165,16 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .focus-main{width:100%;margin-top:10px;padding:10px;border:none;border-radius:10px;background:var(--teal);color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
 .focus-main:active{opacity:.85}
 
+/* Setup entry */
+.setup-entry{background:#F8FAFC;border:1px solid #BFDBFE;border-radius:12px;padding:11px 12px;margin-bottom:10px}
+.se-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.se-title{font-size:12px;font-weight:700;color:#1E3A8A}
+.se-badge{font-size:10px;padding:2px 8px;border-radius:999px;background:#E2E8F0;color:#334155;font-weight:600}
+.se-badge.done{background:#DCFCE7;color:#166534}
+.se-sub{font-size:11px;color:#475569;line-height:1.5}
+.se-btn{margin-top:8px;width:100%;border:none;border-radius:8px;background:#1D6FB4;color:#fff;padding:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.se-btn:active{opacity:.85}
+
 /* Med cards — MEDS TAB */
 .search-wrap{position:relative;margin-bottom:11px}
 .search-input{width:100%;padding:8px 13px 8px 34px;border:1px solid var(--border);border-radius:22px;font-size:12px;font-family:inherit;color:var(--text);background:var(--card);outline:none;transition:border-color .2s}
@@ -199,6 +211,13 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .mc-detail-panel.open{display:block}
 .med-note{font-size:10px;color:var(--muted);background:#F8F9FC;border-radius:7px;padding:6px 8px;margin-top:7px}
 .med-note.urgent{color:#991B1B;background:#FEF2F2;border:1px solid #FECACA}
+.setup-med-card{background:var(--card);border:1px solid #BFDBFE;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:var(--sh)}
+.setup-med-h{font-size:12px;font-weight:700;color:#1E3A8A}
+.setup-med-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.setup-med-list{margin-top:8px;font-size:11px;color:var(--text);line-height:1.6;max-height:98px;overflow:auto;padding-right:2px}
+.setup-med-item{padding:4px 0;border-bottom:1px solid #EEF2FF}
+.setup-med-item:last-child{border-bottom:none}
+.setup-med-empty{font-size:10px;color:var(--muted)}
 
 /* Buy box */
 .buy-center{background:var(--card);border-radius:var(--r);padding:13px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
@@ -471,9 +490,9 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="htop">
     <div class="htitle">💊 慢病用药小管家</div>
     <div class="hright">
+      <div class="hsetup-btn" onclick="openProfileSetup()">🗂 建档</div>
       <div class="hguide-btn" onclick="openGuide(true)">🧭 新手</div>
-      <div class="hbuy-btn" onclick="openBuyModal(null)">🛒 美团买药</div>
-      <div class="hav">张</div>
+      <div class="hav" id="header-avatar">张</div>
     </div>
   </div>
 </div>
@@ -496,6 +515,15 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
         <div class="hst"><div class="hst-n" id="cnt-streak">12</div><div class="hst-l">连续天</div></div>
       </div>
     </div>
+  </div>
+
+  <div class="setup-entry" id="setup-entry">
+    <div class="se-top">
+      <div class="se-title">🗂 个人建档</div>
+      <div class="se-badge" id="setup-badge">未完成</div>
+    </div>
+    <div class="se-sub" id="setup-sub">先录入个人信息与当前药品，系统才能生成贴合你的用药计划。</div>
+    <button class="se-btn" id="setup-btn" onclick="openProfileSetup()">去建档</button>
   </div>
 
   <div class="dose-quick" id="dose-quick">
@@ -580,7 +608,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="al danger">
     <div class="al-dot"></div>
     <div class="al-body"><strong id="today-stock-alert-title">格列美脲片库存告急</strong><small id="today-stock-alert-sub">仅剩 7 天，建议尽快续方</small></div>
-    <div class="al-btn mt" onclick="openBuyModal('格列美脲片')">🛒 买药 →</div>
+    <div class="al-btn mt" onclick="goTab('remind',2);setTimeout(()=>startRenewFlow(),260)">去处理 →</div>
   </div>
   <div class="al warn">
     <div class="al-dot"></div>
@@ -665,6 +693,15 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
     <input class="search-input" placeholder="搜索药品名称…" oninput="searchMeds(this.value)">
+  </div>
+
+  <div class="setup-med-card">
+    <div class="setup-med-h">🧾 我的建档用药计划</div>
+    <div class="setup-med-sub" id="profile-plan-sub">先建档后，系统可基于你的药品信息持续优化提醒与复诊准备。</div>
+    <div class="setup-med-list" id="profile-meds-summary">
+      <div class="setup-med-empty">尚未建档，暂无个性化药品计划</div>
+    </div>
+    <button class="buy-btn outline" style="margin-top:8px" onclick="openProfileSetup()">编辑建档信息</button>
   </div>
 
   <div class="slabel">库存预警 · 需购买</div>
@@ -797,15 +834,16 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="slabel">个人档案</div>
   <div class="profile-card">
     <div class="pc-head">
-      <div class="pc-av">张</div>
-      <div><div class="pc-name">张先生</div><div class="pc-sub">男 · 55岁 · 慢性病患者</div></div>
+      <div class="pc-av" id="profile-card-avatar">张</div>
+      <div><div class="pc-name" id="profile-card-name">张先生</div><div class="pc-sub" id="profile-card-sub">男 · 55岁 · 慢性病患者</div></div>
     </div>
     <div class="pc-rows">
-      <div class="pc-row"><div class="pc-k">主要诊断</div><div class="pc-v">2型糖尿病 · 高血压 · 高血脂</div></div>
-      <div class="pc-row"><div class="pc-k">过敏史</div><div class="pc-v"><span class="allergy-tag">青霉素</span><span class="allergy-tag">磺胺类</span></div></div>
-      <div class="pc-row"><div class="pc-k">主治医生</div><div class="pc-v">李主任 / 糖尿病科<br>王主任 / 心内科</div></div>
-      <div class="pc-row"><div class="pc-k">就诊医院</div><div class="pc-v">北京协和医院</div></div>
-      <div class="pc-row"><div class="pc-k">医保类型</div><div class="pc-v">北京城镇职工医保</div></div>
+      <div class="pc-row"><div class="pc-k">主要诊断</div><div class="pc-v" id="profile-diagnosis">2型糖尿病 · 高血压 · 高血脂</div></div>
+      <div class="pc-row"><div class="pc-k">过敏史</div><div class="pc-v" id="profile-allergy"><span class="allergy-tag">青霉素</span><span class="allergy-tag">磺胺类</span></div></div>
+      <div class="pc-row"><div class="pc-k">主治医生</div><div class="pc-v" id="profile-doctor">李主任 / 糖尿病科<br>王主任 / 心内科</div></div>
+      <div class="pc-row"><div class="pc-k">就诊医院</div><div class="pc-v" id="profile-hospital">北京协和医院</div></div>
+      <div class="pc-row"><div class="pc-k">医保类型</div><div class="pc-v" id="profile-insurance">北京城镇职工医保</div></div>
+      <div class="pc-row"><div class="pc-k">当前用药</div><div class="pc-v" id="profile-med-count">4种（详见药单）</div></div>
     </div>
   </div>
 
@@ -813,10 +851,10 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="emerg-card" style="margin-bottom:10px">
     <div class="emerg-ico">🆘</div>
     <div class="emerg-body">
-      <div class="emerg-title">紧急联系人 · 张太太</div>
-      <div class="emerg-info">138-0000-1234 · 如发生低血糖或不适请立即联系</div>
+      <div class="emerg-title" id="emerg-title">紧急联系人 · 张太太</div>
+      <div class="emerg-info" id="emerg-info">138-0000-1234 · 如发生低血糖或不适请立即联系</div>
     </div>
-    <button class="emerg-call" onclick="showToast('📞 正在拨打紧急联系人…')">拨打</button>
+    <button class="emerg-call" onclick="callEmergencyContact()">拨打</button>
   </div>
 
   <div class="slabel">复诊提醒</div>
@@ -829,7 +867,6 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
     <div class="rc-acts">
       <button class="rca out" onclick="showToast('📅 已加入日历')">加入日历</button>
       <button class="rca pri" onclick="showToast('🔔 提醒已设置')">设提醒</button>
-      <button class="rca mto" onclick="buyAllOnMeituan()">🛒 复诊购药</button>
     </div>
   </div>
   <div class="remind-card">
@@ -860,7 +897,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="remind-card" id="renew-decision-card">
     <div class="rc-inner">
       <div class="rc-ico" style="background:#EFF6FF">🧭</div>
-      <div style="flex:1"><div class="rc-title" id="renew-decision-title">优先处理：格列美脲片续方</div><div class="rc-meta" id="renew-decision-meta">建议先线上复诊开方，再完成购药</div></div>
+      <div style="flex:1"><div class="rc-title" id="renew-decision-title">优先处理：格列美脲片续方</div><div class="rc-meta" id="renew-decision-meta">建议先线上复诊开方，再在本卡完成购药</div></div>
       <div class="rc-badge soon" id="renew-decision-badge">处理中</div>
     </div>
     <div class="rc-acts">
@@ -868,7 +905,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
     </div>
   </div>
 
-  <div class="slabel">药品明细（可选查看）</div>
+  <div class="slabel">药品风险明细（信息查看）</div>
   <div class="remind-card" style="border-color:#FECACA">
     <div class="rc-inner">
       <div class="rc-ico" style="background:#FEE2E2">📋</div>
@@ -877,7 +914,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
     </div>
     <div class="rc-acts">
       <button class="rca out" onclick="showToast('🏥 正在跳转线上续方…')">线上续方</button>
-      <button class="rca mto" onclick="openBuyModal('格列美脲片')">🛒 买药</button>
+      <button class="rca out" onclick="goTab('meds',1)">查看药单</button>
     </div>
   </div>
   <div class="remind-card">
@@ -888,7 +925,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
     </div>
     <div class="rc-acts">
       <button class="rca out" onclick="showToast('🏥 正在跳转线上续方…')">线上续方</button>
-      <button class="rca mto" onclick="openBuyModal('阿托伐他汀钙片')">🛒 买药</button>
+      <button class="rca out" onclick="goTab('meds',1)">查看药单</button>
     </div>
   </div>
 
@@ -899,7 +936,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
     <div class="toggle-row"><div><div class="tg-t">连续漏服升级提醒</div><div class="tg-s">连续漏服 2 次时，通知家属</div></div><div class="tsw off" data-key="family_escalation" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
     <div class="toggle-row"><div><div class="tg-t">库存不足预警</div><div class="tg-s">药品不足 14 天自动预警</div></div><div class="tsw" data-key="stock_low" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
     <div class="toggle-row"><div><div class="tg-t">复诊日提前提醒</div><div class="tg-s">复诊前 3 天及当日提醒</div></div><div class="tsw" data-key="revisit_push" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
-    <div class="toggle-row"><div><div class="tg-t">断药前推送买药入口</div><div class="tg-s">自动显示美团买药快捷链接</div></div><div class="tsw" data-key="buy_shortcut" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
+    <div class="toggle-row"><div><div class="tg-t">断药前推送处理入口</div><div class="tg-s">自动提示“按建议一步处理”</div></div><div class="tsw" data-key="buy_shortcut" onclick="toggleSwitch(this)"><div class="tkn"></div></div></div>
   </div>
 </div>
 
@@ -1055,7 +1092,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="cwin" id="cwin">
     <div class="msg a">
       <div class="msndr">AI助手</div>
-      <div class="mb">您好，张先生！👋<br><br>我已了解您的用药方案：<br>• 二甲双胍片 500mg（早午餐后）<br>• 苯磺酸氨氯地平 5mg（早餐后）<br>• 格列美脲片 1mg（晚餐前）⚠ 剩7天<br>• 阿托伐他汀钙片 20mg（晚餐后）<br><br>格列美脲片库存告急，建议尽快续方！有任何用药问题随时问我 🙂</div>
+      <div class="mb">您好！👋<br><br>建议先完成“个人建档”，这样我能基于你的真实药品和病史给出更匹配的提示。<br><br>你也可以直接问我：漏服处理、饮食禁忌、能否同服、何时复诊续方。</div>
       <div class="mt2">刚刚</div>
     </div>
   </div>
@@ -1095,6 +1132,39 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   </div>
 </div>
 
+<!-- Profile Setup Modal -->
+<div class="mbk" id="modal-profile">
+  <div class="msh">
+    <div class="mhd"></div>
+    <div class="mt-m">🗂 建立个人用药档案</div>
+    <div class="med-note" style="margin-bottom:10px">先建档，再开始日常用药管理。信息只保存在当前设备，便于后续复诊汇报。</div>
+
+    <div class="f2">
+      <div class="fg"><label class="fl">姓名</label><input class="fi" id="pf-name" placeholder="如：张先生"></div>
+      <div class="fg"><label class="fl">年龄</label><input class="fi" id="pf-age" type="number" placeholder="如：55"></div>
+    </div>
+    <div class="f2">
+      <div class="fg"><label class="fl">性别</label><select class="fi" id="pf-gender"><option>男</option><option>女</option><option>未设置</option></select></div>
+      <div class="fg"><label class="fl">医保类型</label><input class="fi" id="pf-insurance" placeholder="如：城镇职工医保"></div>
+    </div>
+    <div class="fg"><label class="fl">主要诊断</label><input class="fi" id="pf-diagnosis" placeholder="如：2型糖尿病、高血压"></div>
+    <div class="fg"><label class="fl">过敏史（选填）</label><input class="fi" id="pf-allergy" placeholder="如：青霉素、磺胺类"></div>
+    <div class="fg"><label class="fl">主治医生</label><input class="fi" id="pf-doctor" placeholder="如：李主任 / 糖尿病科"></div>
+    <div class="fg"><label class="fl">就诊医院</label><input class="fi" id="pf-hospital" placeholder="如：北京协和医院"></div>
+    <div class="f2">
+      <div class="fg"><label class="fl">紧急联系人</label><input class="fi" id="pf-emerg-name" placeholder="如：张太太"></div>
+      <div class="fg"><label class="fl">联系电话</label><input class="fi" id="pf-emerg-phone" placeholder="如：138-0000-1234"></div>
+    </div>
+    <div class="fg">
+      <label class="fl">当前药品清单（每行一条）</label>
+      <textarea class="fi" id="pf-meds" style="min-height:96px;resize:vertical" placeholder="示例：&#10;二甲双胍片｜500mg 每日2次（早/午餐后）&#10;苯磺酸氨氯地平｜5mg 每日1次（早餐后）"></textarea>
+    </div>
+
+    <button class="bmain" onclick="saveProfileSetup()">保存建档信息</button>
+    <button class="bcancel" onclick="closeModal('modal-profile')">取消</button>
+  </div>
+</div>
+
 <!-- Buy Modal -->
 <div class="mbk" id="modal-buy">
   <div class="msh">
@@ -1119,6 +1189,18 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   </div>
 </div>
 
+<!-- Symptom Summary Copy Fallback Modal -->
+<div class="mbk" id="modal-summary">
+  <div class="msh">
+    <div class="mhd"></div>
+    <div class="mt-m">📋 复诊摘要（可手动复制）</div>
+    <div class="med-note" style="margin-bottom:10px">当前环境自动复制受限时，可长按下方文本复制后发给医生。</div>
+    <textarea class="fi" id="summary-copy-text" readonly style="min-height:170px;resize:vertical;line-height:1.6;background:#fff"></textarea>
+    <button class="bmain" onclick="copySummaryFromModal()">再试一次自动复制</button>
+    <button class="bcancel" onclick="closeModal('modal-summary')">关闭</button>
+  </div>
+</div>
+
 <!-- Bottom Nav -->
 <div class="bnav">
   <button class="nb on" onclick="goTab('today',0)"><div class="ni"><svg viewBox="0 0 22 22"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="12" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="12" width="7" height="7" rx="1.5"/><rect x="12" y="12" width="7" height="7" rx="1.5"/></svg></div><div class="nlbl">今日</div></button>
@@ -1137,9 +1219,9 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 <div class="guide-float hidden" id="guide-float">
   <div class="gf-head">
     <div class="gf-title">新手使用顺序</div>
-    <div class="gf-prog" id="guide-prog">1/6</div>
+    <div class="gf-prog" id="guide-prog">1/7</div>
   </div>
-  <div class="gf-text" id="guide-text">先完成今日用药打卡，建立当日进度。</div>
+  <div class="gf-text" id="guide-text">先完成个人建档，系统才能生成贴合你的用药计划。</div>
   <div class="gf-actions">
     <button class="gf-btn prev" id="guide-prev-btn" onclick="prevGuideStep()">上一步</button>
     <button class="gf-btn next" id="guide-next-btn" onclick="nextGuideStep()">下一步并跳转</button>
@@ -1199,15 +1281,30 @@ const DEFAULT_TOGGLES={
   buy_shortcut:true
 };
 const DEFAULT_LAST_ORDERS={'格列美脲片':'2026-04-18','阿托伐他汀钙片':'2026-04-12'};
+const DEFAULT_PROFILE={
+  name:'张先生',
+  age:'55',
+  gender:'男',
+  diagnosis:'2型糖尿病 · 高血压 · 高血脂',
+  allergy:'青霉素、磺胺类',
+  doctor:'李主任 / 糖尿病科；王主任 / 心内科',
+  hospital:'北京协和医院',
+  insurance:'北京城镇职工医保',
+  emergencyName:'张太太',
+  emergencyPhone:'138-0000-1234',
+  meds:'二甲双胍片｜500mg 每日2次（早/午餐后）\n苯磺酸氨氯地平｜5mg 每日1次（早餐后）\n格列美脲片｜1mg 每日1次（晚餐前）\n阿托伐他汀钙片｜20mg 每日1次（晚餐后）'
+};
+const PROFILE_MED_LIMIT=8;
 const GUIDE_STEPS=[
-  {tab:'today',idx:0,target:'task-dose-item',text:'第1步：先在“今日”完成用药打卡，确认今天不漏服。'},
-  {tab:'records',idx:3,target:'bp-s',text:'第2步：到“记录”录入血压/血糖，形成复诊依据。',focus:true},
-  {tab:'records',idx:3,target:'sym-card',text:'第3步：若有不适，在同一页记录症状，复诊时不容易遗漏。'},
-  {tab:'remind',idx:2,target:'sym-report-meta',text:'第4步：到“提醒”查看复诊汇报准备，并可一键复制摘要。'},
-  {tab:'ai',idx:4,target:'cinp',text:'第5步：有疑问可问“AI助手”，先确认再执行更安心。',focus:true},
-  {tab:'remind',idx:2,target:'renew-main-btn',text:'第6步：最后按建议处理续方购药，避免断药风险。'}
+  {tab:'today',idx:0,target:'setup-entry',text:'第1步：先完成个人建档，后续提醒和计划才会贴合你的情况。'},
+  {tab:'today',idx:0,target:'task-dose-item',text:'第2步：再在“今日”完成用药打卡，确认今天不漏服。'},
+  {tab:'records',idx:3,target:'bp-s',text:'第3步：到“记录”录入血压/血糖，形成复诊依据。',focus:true},
+  {tab:'records',idx:3,target:'sym-card',text:'第4步：若有不适，在同一页记录症状，复诊时不容易遗漏。'},
+  {tab:'remind',idx:2,target:'sym-report-meta',text:'第5步：到“提醒”查看复诊汇报准备，并可一键复制摘要。'},
+  {tab:'ai',idx:4,target:'cinp',text:'第6步：有疑问可问“AI助手”，先确认再执行更安心。',focus:true},
+  {tab:'remind',idx:2,target:'renew-main-btn',text:'第7步：最后按建议处理续方购药，避免断药风险。'}
 ];
-let uiState={toggles:{...DEFAULT_TOGGLES},lastOrders:{...DEFAULT_LAST_ORDERS},healthLoggedDate:'',guideStep:0,guideCompleted:false,symptomLogs:[]};
+let uiState={toggles:{...DEFAULT_TOGGLES},lastOrders:{...DEFAULT_LAST_ORDERS},healthLoggedDate:'',guideStep:0,guideCompleted:false,symptomLogs:[],profile:{...DEFAULT_PROFILE},profileCompleted:false};
 const SYMPTOM_LOG_LIMIT=30;
 let latestTopRisk={name:'格列美脲片',days:7};
 let nextStepAction='dose';
@@ -1274,6 +1371,8 @@ function saveState(){
     guideStep:uiState.guideStep,
     guideCompleted:uiState.guideCompleted,
     symptomLogs:uiState.symptomLogs,
+    profile:uiState.profile,
+    profileCompleted:uiState.profileCompleted,
     calData,
     chatHistory
   }));
@@ -1296,6 +1395,10 @@ function loadState(){
     uiState.symptomLogs=Array.isArray(saved?.symptomLogs)
       ?saved.symptomLogs.map(normalizeSymptomLog).filter(Boolean).slice(0,SYMPTOM_LOG_LIMIT)
       :[];
+    uiState.profile=normalizeProfile(saved?.profile||DEFAULT_PROFILE);
+    uiState.profileCompleted=typeof saved?.profileCompleted==='boolean'
+      ?saved.profileCompleted
+      :false;
     if(saved?.calData&&typeof saved.calData==='object'){
       Object.keys(saved.calData).forEach(k=>{
         if(['ok','miss','partial'].includes(saved.calData[k]))calData[k]=saved.calData[k];
@@ -1329,6 +1432,169 @@ function renderToggles(){
     const on=uiState.toggles[sw.dataset.key]!==false;
     sw.classList.toggle('off',!on);
   });
+}
+function normalizeProfile(raw){
+  const src=(raw&&typeof raw==='object')?raw:{};
+  const clean=(val,max=60)=>String(val??'').trim().replace(/\s+/g,' ').slice(0,max);
+  const gender=['男','女','未设置'].includes(src.gender)?src.gender:'未设置';
+  const medsText=String(src.meds??'')
+    .split(/\n+/)
+    .map(x=>x.trim())
+    .filter(Boolean)
+    .slice(0,PROFILE_MED_LIMIT)
+    .join('\n');
+  return {
+    name:clean(src.name||DEFAULT_PROFILE.name,20),
+    age:String(src.age??DEFAULT_PROFILE.age).replace(/[^\d]/g,'').slice(0,3),
+    gender,
+    diagnosis:clean(src.diagnosis||DEFAULT_PROFILE.diagnosis,80),
+    allergy:clean(src.allergy??'',80),
+    doctor:clean(src.doctor||DEFAULT_PROFILE.doctor,80),
+    hospital:clean(src.hospital||DEFAULT_PROFILE.hospital,60),
+    insurance:clean(src.insurance||DEFAULT_PROFILE.insurance,40),
+    emergencyName:clean(src.emergencyName||DEFAULT_PROFILE.emergencyName,20),
+    emergencyPhone:clean(src.emergencyPhone||DEFAULT_PROFILE.emergencyPhone,24),
+    meds:medsText
+  };
+}
+function getCurrentProfile(){
+  return normalizeProfile(uiState.profile||DEFAULT_PROFILE);
+}
+function getDisplayName(){
+  return getCurrentProfile().name||'用户';
+}
+function getProfileMedsList(profile){
+  return String(profile?.meds||'')
+    .split(/\n+/)
+    .map(x=>x.trim())
+    .filter(Boolean)
+    .slice(0,PROFILE_MED_LIMIT);
+}
+function isProfileCompleted(profile){
+  const p=normalizeProfile(profile||DEFAULT_PROFILE);
+  return !!(p.name&&p.diagnosis&&getProfileMedsList(p).length>0);
+}
+function renderHeroGreeting(){
+  const now=new Date();
+  const h=now.getHours();
+  const g=h<5?'夜深了，':h<11?'早上好，':h<13?'中午好，':h<18?'下午好，':'晚上好，';
+  const hero=document.getElementById('hero-greet');
+  if(hero)hero.textContent=`${g}${getDisplayName()} 👋`;
+}
+function renderProfileUI(){
+  const p=getCurrentProfile();
+  const avatar=(p.name||'用').replace(/\s+/g,'').slice(0,1)||'用';
+  const meds=getProfileMedsList(p);
+  const headerAvatar=document.getElementById('header-avatar');
+  if(headerAvatar)headerAvatar.textContent=avatar;
+  const cardAvatar=document.getElementById('profile-card-avatar');
+  if(cardAvatar)cardAvatar.textContent=avatar;
+  const cardName=document.getElementById('profile-card-name');
+  if(cardName)cardName.textContent=p.name||'未设置';
+  const cardSub=document.getElementById('profile-card-sub');
+  if(cardSub){
+    const ageText=p.age?`${p.age}岁`:'年龄未设置';
+    cardSub.textContent=`${p.gender} · ${ageText} · 慢病患者`;
+  }
+  const diagnosis=document.getElementById('profile-diagnosis');
+  if(diagnosis)diagnosis.textContent=p.diagnosis||'未设置';
+  const allergy=document.getElementById('profile-allergy');
+  if(allergy){
+    const arr=(p.allergy||'').split(/[、，,;；/]+/).map(x=>x.trim()).filter(Boolean).slice(0,4);
+    allergy.innerHTML=arr.length?arr.map(x=>`<span class="allergy-tag">${escapeHtml(x)}</span>`).join(''):'无明确过敏史';
+  }
+  const doctor=document.getElementById('profile-doctor');
+  if(doctor)doctor.innerHTML=escapeHtml(p.doctor||'未设置').replace(/[；;]+/g,'<br>');
+  const hospital=document.getElementById('profile-hospital');
+  if(hospital)hospital.textContent=p.hospital||'未设置';
+  const insurance=document.getElementById('profile-insurance');
+  if(insurance)insurance.textContent=p.insurance||'未设置';
+  const medCount=document.getElementById('profile-med-count');
+  if(medCount)medCount.textContent=meds.length?`${meds.length}种（详见药单）`:'未录入';
+  const emergTitle=document.getElementById('emerg-title');
+  if(emergTitle)emergTitle.textContent=`紧急联系人 · ${p.emergencyName||'未设置'}`;
+  const emergInfo=document.getElementById('emerg-info');
+  if(emergInfo)emergInfo.textContent=`${p.emergencyPhone||'未设置'} · 如发生低血糖或不适请立即联系`;
+
+  const setupBadge=document.getElementById('setup-badge');
+  const setupSub=document.getElementById('setup-sub');
+  const setupBtn=document.getElementById('setup-btn');
+  if(setupBadge&&setupSub&&setupBtn){
+    setupBadge.classList.toggle('done',uiState.profileCompleted);
+    setupBadge.textContent=uiState.profileCompleted?'已完成':'未完成';
+    setupSub.textContent=uiState.profileCompleted
+      ?`已为 ${p.name} 建立档案，可持续记录并用于复诊汇报。`
+      :'先录入个人信息与当前药品，系统才能生成贴合你的用药计划。';
+    setupBtn.textContent=uiState.profileCompleted?'编辑建档信息':'去建档';
+  }
+
+  const planSub=document.getElementById('profile-plan-sub');
+  if(planSub){
+    planSub.textContent=uiState.profileCompleted
+      ?`已建档：${p.name} · ${meds.length} 种长期用药`
+      :'先建档后，系统可基于你的药品信息持续优化提醒与复诊准备。';
+  }
+  const planList=document.getElementById('profile-meds-summary');
+  if(planList){
+    planList.innerHTML=meds.length
+      ?meds.map(item=>`<div class="setup-med-item">• ${escapeHtml(item)}</div>`).join('')
+      :'<div class="setup-med-empty">尚未建档，暂无个性化药品计划</div>';
+  }
+}
+function openProfileSetup(){
+  const p=getCurrentProfile();
+  const set=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val||'';};
+  set('pf-name',p.name);
+  set('pf-age',p.age);
+  set('pf-gender',p.gender);
+  set('pf-diagnosis',p.diagnosis);
+  set('pf-allergy',p.allergy);
+  set('pf-doctor',p.doctor);
+  set('pf-hospital',p.hospital);
+  set('pf-insurance',p.insurance);
+  set('pf-emerg-name',p.emergencyName);
+  set('pf-emerg-phone',p.emergencyPhone);
+  set('pf-meds',p.meds);
+  document.getElementById('modal-profile').classList.add('open');
+}
+function saveProfileSetup(){
+  const profile=normalizeProfile({
+    name:document.getElementById('pf-name')?.value,
+    age:document.getElementById('pf-age')?.value,
+    gender:document.getElementById('pf-gender')?.value,
+    diagnosis:document.getElementById('pf-diagnosis')?.value,
+    allergy:document.getElementById('pf-allergy')?.value,
+    doctor:document.getElementById('pf-doctor')?.value,
+    hospital:document.getElementById('pf-hospital')?.value,
+    insurance:document.getElementById('pf-insurance')?.value,
+    emergencyName:document.getElementById('pf-emerg-name')?.value,
+    emergencyPhone:document.getElementById('pf-emerg-phone')?.value,
+    meds:document.getElementById('pf-meds')?.value
+  });
+  if(!profile.name){
+    showToast('⚠ 请先填写姓名');
+    return;
+  }
+  if(!profile.diagnosis){
+    showToast('⚠ 请填写主要诊断');
+    return;
+  }
+  if(getProfileMedsList(profile).length===0){
+    showToast('⚠ 请至少填写一条当前药品');
+    return;
+  }
+  uiState.profile=profile;
+  uiState.profileCompleted=isProfileCompleted(profile);
+  saveState();
+  renderProfileUI();
+  renderHeroGreeting();
+  renderTodayFocus();
+  closeModal('modal-profile');
+  showToast('✅ 个人建档已保存，用药计划已更新');
+}
+function callEmergencyContact(){
+  const p=getCurrentProfile();
+  showToast(`📞 正在拨打 ${p.emergencyName}（${p.emergencyPhone}）…`);
 }
 function escapeHtml(str){
   return String(str??'').replace(/[&<>"']/g,ch=>({
@@ -1455,19 +1721,13 @@ async function copyToClipboardText(text){
   document.body.removeChild(ta);
   return ok;
 }
-async function copySymptomSummary(){
-  const logs=Array.isArray(uiState.symptomLogs)?uiState.symptomLogs:[];
-  if(logs.length===0){
-    showToast('📝 还没有不适记录，先去记录一条吧');
-    goSymptomLog();
-    return;
-  }
+function buildSymptomSummaryText(logs){
   const rows=[...logs].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,8);
   const now=new Date();
   const head=`复诊用药不适摘要（${now.getMonth()+1}月${now.getDate()}日 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}）`;
   const lines=[
     head,
-    '患者：张先生',
+    `患者：${getDisplayName()}`,
     `已记录：${logs.length}条（以下为最近${rows.length}条）`,
     ''
   ];
@@ -1476,12 +1736,52 @@ async function copySymptomSummary(){
     const note=item.note?`；备注：${item.note}`:'';
     lines.push(`${idx+1}. ${formatSymptomTime(item.ts)}｜${item.level}｜${sym}｜${item.relation}${note}`);
   });
+  return lines.join('\n');
+}
+function openSummaryFallback(text){
+  const ta=document.getElementById('summary-copy-text');
+  if(!ta)return;
+  ta.value=text;
+  document.getElementById('modal-summary').classList.add('open');
+  setTimeout(()=>{
+    ta.focus();
+    ta.select();
+  },120);
+  showToast('📋 自动复制受限，已打开摘要，可手动复制');
+}
+async function copySummaryFromModal(){
+  const ta=document.getElementById('summary-copy-text');
+  if(!ta||!ta.value.trim()){
+    showToast('⚠ 暂无可复制内容');
+    return;
+  }
   try{
-    const ok=await copyToClipboardText(lines.join('\n'));
+    const ok=await copyToClipboardText(ta.value);
     if(!ok)throw new Error('copy failed');
     showToast('📋 已复制复诊摘要，可粘贴给医生');
   }catch(e){
-    showToast('⚠ 复制失败，请稍后重试');
+    ta.focus();
+    ta.select();
+    showToast('⚠ 自动复制仍受限，请长按或 Ctrl/Cmd+C 复制');
+  }
+}
+async function copySymptomSummary(){
+  const logs=Array.isArray(uiState.symptomLogs)?uiState.symptomLogs:[];
+  if(logs.length===0){
+    showToast('📝 还没有不适记录，先去记录一条吧');
+    goSymptomLog();
+    return;
+  }
+  const summaryText=buildSymptomSummaryText(logs);
+  try{
+    const ok=await copyToClipboardText(summaryText);
+    if(ok){
+      showToast('📋 已复制复诊摘要，可粘贴给医生');
+      return;
+    }
+    openSummaryFallback(summaryText);
+  }catch(e){
+    openSummaryFallback(summaryText);
   }
 }
 function clearGuideTarget(){
@@ -1588,7 +1888,7 @@ function renderTodayFocus(){
   const loggedToday=uiState.healthLoggedDate===getTodayISO();
   const renewDone=latestTopRisk.days>14;
   const doneCount=[doneDose,loggedToday,renewDone].filter(Boolean).length;
-  document.getElementById('focus-progress').textContent=`${doneCount}/3 完成`;
+  document.getElementById('focus-progress').textContent=uiState.profileCompleted?`${doneCount}/3 完成`:'先建档后开始';
 
   if(doneDose){
     setTaskState('task-dose','ok',null,'今日用药已完成');
@@ -1612,7 +1912,10 @@ function renderTodayFocus(){
   }
 
   const mainBtn=document.getElementById('focus-main-btn');
-  if(!doneDose){
+  if(!uiState.profileCompleted){
+    nextStepAction='setup';
+    mainBtn.textContent='先完成个人建档';
+  }else if(!doneDose){
     nextStepAction='dose';
     mainBtn.textContent='去完成下一次用药';
   }else if(!loggedToday){
@@ -1692,7 +1995,10 @@ function updateNextStepBar(){
     return;
   }
   bar.classList.toggle('hidden',false);
-  if(nextStepAction==='dose'){
+  if(nextStepAction==='setup'){
+    txt.textContent='下一步：先完成个人建档';
+    btn.textContent='去建档';
+  }else if(nextStepAction==='dose'){
     txt.textContent='下一步：去完成下一次用药打卡';
     btn.textContent='去打卡';
   }else if(nextStepAction==='health'){
@@ -1707,6 +2013,10 @@ function updateNextStepBar(){
   }
 }
 function followNextStep(){
+  if(nextStepAction==='setup'){
+    openProfileSetup();
+    return;
+  }
   if(nextStepAction==='dose'){
     const nextId=getNextPendingMedId();
     if(nextId){
@@ -1796,8 +2106,8 @@ function renderCarePlanUI(){
 
   document.getElementById('renew-decision-title').textContent=`优先处理：${topRisk.name}（剩余${topRisk.days}天）`;
   document.getElementById('renew-decision-meta').textContent=topRisk.days<=7
-    ?`建议先线上复诊开方，再完成购药，避免断药`
-    :`建议在${formatMD(REVISIT_PLAN.main.date)}复诊时同步完成续方购药`;
+    ?`建议先线上复诊开方，再在本卡一步处理购药，避免断药`
+    :`建议在${formatMD(REVISIT_PLAN.main.date)}复诊时同步续方，再在本卡处理购药`;
   setBadge(document.getElementById('renew-decision-badge'),topRisk.days<=7?'urgent':'soon',topRisk.days<=7?'立即处理':'本周处理');
   const renewMainBtn=document.getElementById('renew-main-btn');
   if(renewMainBtn){
@@ -1812,11 +2122,10 @@ function renderCarePlanUI(){
   const D=['周日','周一','周二','周三','周四','周五','周六'];
   document.getElementById('today-date').textContent=
     `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 · ${D[now.getDay()]}`;
-  const h=now.getHours();
-  const g=h<5?'夜深了，':h<11?'早上好，':h<13?'中午好，':h<18?'下午好，':'晚上好，';
-  document.getElementById('hero-greet').textContent=g+'张先生 👋';
-  document.getElementById('tip-text').textContent=TIPS[Math.floor(Math.random()*TIPS.length)];
   loadState();
+  renderProfileUI();
+  renderHeroGreeting();
+  document.getElementById('tip-text').textContent=TIPS[Math.floor(Math.random()*TIPS.length)];
   seedCalendarData();
   renderAllDoseRows();
   renderToggles();
@@ -2120,7 +2429,7 @@ function toggleDetail(btn){
 // ─── Modals ───
 function openAddModal(){document.getElementById('modal-add').classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-['modal-add','modal-buy','modal-missed'].forEach(id=>{
+['modal-add','modal-profile','modal-buy','modal-missed','modal-summary'].forEach(id=>{
   document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
 });
 
@@ -2244,7 +2553,7 @@ function clearChat(){
   saveState();
   document.getElementById('cwin').innerHTML=`
     <div class="msg a"><div class="msndr">AI助手</div>
-    <div class="mb">对话已清空。您好，张先生！有什么用药问题随时问我 🙂</div>
+    <div class="mb">对话已清空。您好，${getDisplayName()}！有什么用药问题随时问我 🙂</div>
     <div class="mt2">刚刚</div></div>`;
   showToast('🗑 对话记录已清空');
 }
