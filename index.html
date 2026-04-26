@@ -274,11 +274,18 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .pbtn:first-child{border-radius:5px 0 0 5px}
 .pbtn:last-child{border-radius:0 5px 5px 0}
 .pbtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
-.bchart{display:flex;gap:4px;align-items:flex-end;height:64px}
-.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
-.bv{font-size:8px;font-weight:500}
-.bbar{width:100%;border-radius:3px 3px 0 0}
-.bl{font-size:8px;color:var(--muted)}
+.bchart{display:flex;gap:5px;align-items:flex-end;height:112px;width:100%;overflow-x:hidden;overflow-y:visible;padding-top:16px}
+.bchart.month-scroll{overflow-x:auto;overflow-y:visible;justify-content:flex-start;gap:5px;padding-top:16px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.bchart.month-scroll::-webkit-scrollbar{height:4px}
+.bchart.month-scroll::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:3px}
+.bw{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px}
+.bv{font-size:10px;font-weight:700;line-height:1.2;white-space:nowrap;padding:1px 5px;border-radius:999px;background:rgba(255,255,255,.9)}
+.bchart.month-scroll .bw{flex:0 0 38px;min-width:38px}
+.bchart.month-scroll .bv{font-size:10px}
+.bchart.month-scroll .bl{font-size:8px}
+.bbar{width:100%;border-radius:5px 5px 0 0;min-height:8px}
+.bl{font-size:10px;color:var(--muted)}
+.adh-hint{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.4;min-height:14px}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
 .sc{background:var(--card);border-radius:11px;padding:11px;box-shadow:var(--sh);border:1px solid var(--border)}
 .sv{font-size:20px;font-weight:700}
@@ -324,6 +331,27 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .he-u{font-size:9px;color:var(--muted);padding-bottom:7px;white-space:nowrap}
 .bsm{padding:6px 13px;background:var(--teal);color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .2s}
 .bsm:active{opacity:.8}
+/* Symptom log */
+.sym-card{background:var(--card);border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:var(--sh);border:1px solid var(--border)}
+.sym-t{font-size:13px;font-weight:600;margin-bottom:4px}
+.sym-sub{font-size:10px;color:var(--muted);margin-bottom:8px}
+.sym-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.sym-chip{padding:5px 9px;border-radius:16px;border:1px solid var(--border);background:#fff;font-size:11px;color:var(--text);cursor:pointer}
+.sym-chip.on{background:#E0F2FE;border-color:#7DD3FC;color:#0C4A6E;font-weight:600}
+.sym-row{display:flex;gap:6px;align-items:center;margin-bottom:7px}
+.sym-levels{display:flex;gap:6px;flex:1}
+.sym-level{flex:1;padding:6px 6px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--muted)}
+.sym-level.on.low{background:#ECFDF5;border-color:#86EFAC;color:#166534}
+.sym-level.on.mid{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
+.sym-level.on.high{background:#FEF2F2;border-color:#FCA5A5;color:#991B1B}
+.sym-select{width:100%;padding:7px 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:11px;color:var(--text);font-family:inherit}
+.sym-ta{width:100%;min-height:58px;resize:vertical;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit;background:#fff;color:var(--text)}
+.sym-list{margin-top:9px;border-top:1px solid var(--border);padding-top:8px}
+.sym-empty{font-size:10px;color:var(--muted)}
+.sym-item{padding:7px 0;border-bottom:1px solid #EEF1F6}
+.sym-item:last-child{border-bottom:none}
+.sym-h{font-size:11px;font-weight:600}
+.sym-m{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5}
 /* SVG Line chart */
 .line-chart-wrap{position:relative;margin-bottom:6px}
 .line-chart-wrap svg{width:100%;overflow:visible}
@@ -816,6 +844,18 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
     </div>
   </div>
 
+  <div class="remind-card">
+    <div class="rc-inner">
+      <div class="rc-ico" style="background:#E0F2FE">📝</div>
+      <div style="flex:1"><div class="rc-title">复诊汇报准备</div><div class="rc-meta" id="sym-report-meta">已记录 0 条用药不适</div></div>
+      <div class="rc-badge ok" id="sym-report-badge">就绪</div>
+    </div>
+    <div class="rc-acts">
+      <button class="rca out" onclick="goSymptomLog()">查看记录</button>
+      <button class="rca pri" onclick="copySymptomSummary()">复制摘要</button>
+    </div>
+  </div>
+
   <div class="slabel">续方决策</div>
   <div class="remind-card" id="renew-decision-card">
     <div class="rc-inner">
@@ -871,6 +911,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
       <div style="display:flex"><button class="pbtn on" onclick="setPeriod(this,'week')">近7天</button><button class="pbtn" onclick="setPeriod(this,'month')">近30天</button></div>
     </div>
     <div class="bchart" id="adh-chart"></div>
+    <div class="adh-hint" id="adh-hint"></div>
   </div>
 
   <div class="sg">
@@ -925,6 +966,43 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
     <div class="he-row" style="margin-bottom:0">
       <div class="he-f"><div class="he-lbl">体重（选填）</div><input class="he-inp" type="number" step="0.1" placeholder="kg" id="wt"></div>
       <button class="bsm" onclick="saveHealth()">保存</button>
+    </div>
+  </div>
+
+  <div class="sym-card" id="sym-card">
+    <div class="sym-t">📝 用药不适记录（复诊可汇报）</div>
+    <div class="sym-sub">建议顺序：先保存今日指标，再记录不适；若不在常见列表，可在“其他不适”手动填写</div>
+    <div class="sym-chips" id="sym-chips">
+      <button class="sym-chip" data-s="头晕" onclick="toggleSymptomChip(this)">头晕</button>
+      <button class="sym-chip" data-s="胃部不适" onclick="toggleSymptomChip(this)">胃部不适</button>
+      <button class="sym-chip" data-s="乏力" onclick="toggleSymptomChip(this)">乏力</button>
+      <button class="sym-chip" data-s="心慌" onclick="toggleSymptomChip(this)">心慌</button>
+      <button class="sym-chip" data-s="手抖出汗" onclick="toggleSymptomChip(this)">手抖出汗</button>
+      <button class="sym-chip" data-s="下肢水肿" onclick="toggleSymptomChip(this)">下肢水肿</button>
+    </div>
+    <div class="sym-row">
+      <div class="sym-levels">
+        <button class="sym-level on low" data-lv="轻度" onclick="setSymLevel(this)">轻度</button>
+        <button class="sym-level mid" data-lv="中度" onclick="setSymLevel(this)">中度</button>
+        <button class="sym-level high" data-lv="重度" onclick="setSymLevel(this)">重度</button>
+      </div>
+    </div>
+    <div class="sym-row">
+      <select class="sym-select" id="sym-rel">
+        <option>发生在服药后30分钟内</option>
+        <option>发生在服药后1-2小时</option>
+        <option>与服药时间无明显关系</option>
+      </select>
+    </div>
+    <div class="sym-row">
+      <input class="sym-select" id="sym-other" maxlength="16" placeholder="其他不适（选填，如口干、失眠）">
+    </div>
+    <div class="sym-row" style="display:block">
+      <textarea class="sym-ta" id="sym-note" placeholder="可补充：大概几点出现、持续多久、是否影响日常（选填）"></textarea>
+    </div>
+    <button class="bsm" style="width:100%" onclick="saveSymptom()">保存不适记录</button>
+    <div class="sym-list" id="sym-list">
+      <div class="sym-empty">暂无不适记录</div>
     </div>
   </div>
 
@@ -1045,7 +1123,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 <div class="bnav">
   <button class="nb on" onclick="goTab('today',0)"><div class="ni"><svg viewBox="0 0 22 22"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="12" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="12" width="7" height="7" rx="1.5"/><rect x="12" y="12" width="7" height="7" rx="1.5"/></svg></div><div class="nlbl">今日</div></button>
   <button class="nb" onclick="goTab('meds',1)"><div class="ni"><svg viewBox="0 0 22 22"><path d="M9 3H5a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z"/><path d="M9 3v6h6M7 13h8M7 17h5"/></svg></div><div class="nlbl">药单</div></button>
-  <button class="nb" onclick="goTab('remind',2)"><div class="ni"><svg viewBox="0 0 22 22"><path d="M18 8A7 7 0 104 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><div class="nlbl">提醒</div></button>
+  <button class="nb" onclick="goTab('remind',2)"><div class="ni"><svg viewBox="0 0 24 24"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16l-2-2z"/><path d="M10 20a2 2 0 004 0"/></svg></div><div class="nlbl">提醒</div></button>
   <button class="nb" onclick="goTab('records',3)"><div class="ni"><svg viewBox="0 0 22 22"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-4"/></svg></div><div class="nlbl">记录</div></button>
   <button class="nb" onclick="goTab('ai',4)"><div class="ni"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="8"/><path d="M8 10h.01M11 10h.01M14 10h.01"/><path d="M8 14s1 1.5 3 1.5 3-1.5 3-1.5"/></svg></div><div class="nlbl">AI助手</div></button>
 </div>
@@ -1059,7 +1137,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 <div class="guide-float hidden" id="guide-float">
   <div class="gf-head">
     <div class="gf-title">新手使用顺序</div>
-    <div class="gf-prog" id="guide-prog">1/4</div>
+    <div class="gf-prog" id="guide-prog">1/6</div>
   </div>
   <div class="gf-text" id="guide-text">先完成今日用药打卡，建立当日进度。</div>
   <div class="gf-actions">
@@ -1124,10 +1202,13 @@ const DEFAULT_LAST_ORDERS={'格列美脲片':'2026-04-18','阿托伐他汀钙片
 const GUIDE_STEPS=[
   {tab:'today',idx:0,target:'task-dose-item',text:'第1步：先在“今日”完成用药打卡，确认今天不漏服。'},
   {tab:'records',idx:3,target:'bp-s',text:'第2步：到“记录”录入血压/血糖，形成复诊依据。',focus:true},
-  {tab:'remind',idx:2,target:'renew-main-btn',text:'第3步：到“提醒”按建议一步处理续方购药。'},
-  {tab:'ai',idx:4,target:'cinp',text:'第4步：到“AI助手”输入问题，获取用药解释与提醒。',focus:true}
+  {tab:'records',idx:3,target:'sym-card',text:'第3步：若有不适，在同一页记录症状，复诊时不容易遗漏。'},
+  {tab:'remind',idx:2,target:'sym-report-meta',text:'第4步：到“提醒”查看复诊汇报准备，并可一键复制摘要。'},
+  {tab:'ai',idx:4,target:'cinp',text:'第5步：有疑问可问“AI助手”，先确认再执行更安心。',focus:true},
+  {tab:'remind',idx:2,target:'renew-main-btn',text:'第6步：最后按建议处理续方购药，避免断药风险。'}
 ];
-let uiState={toggles:{...DEFAULT_TOGGLES},lastOrders:{...DEFAULT_LAST_ORDERS},healthLoggedDate:'',guideStep:0,guideCompleted:false};
+let uiState={toggles:{...DEFAULT_TOGGLES},lastOrders:{...DEFAULT_LAST_ORDERS},healthLoggedDate:'',guideStep:0,guideCompleted:false,symptomLogs:[]};
+const SYMPTOM_LOG_LIMIT=30;
 let latestTopRisk={name:'格列美脲片',days:7};
 let nextStepAction='dose';
 const MED_PLAN_ORDER=['m1','m2','m3','m4','m5'];
@@ -1192,6 +1273,7 @@ function saveState(){
     healthLoggedDate:uiState.healthLoggedDate,
     guideStep:uiState.guideStep,
     guideCompleted:uiState.guideCompleted,
+    symptomLogs:uiState.symptomLogs,
     calData,
     chatHistory
   }));
@@ -1211,6 +1293,9 @@ function loadState(){
     uiState.healthLoggedDate=saved?.healthLoggedDate||'';
     uiState.guideStep=Math.min(Math.max(saved?.guideStep??0,0),GUIDE_STEPS.length-1);
     uiState.guideCompleted=!!saved?.guideCompleted;
+    uiState.symptomLogs=Array.isArray(saved?.symptomLogs)
+      ?saved.symptomLogs.map(normalizeSymptomLog).filter(Boolean).slice(0,SYMPTOM_LOG_LIMIT)
+      :[];
     if(saved?.calData&&typeof saved.calData==='object'){
       Object.keys(saved.calData).forEach(k=>{
         if(['ok','miss','partial'].includes(saved.calData[k]))calData[k]=saved.calData[k];
@@ -1244,6 +1329,160 @@ function renderToggles(){
     const on=uiState.toggles[sw.dataset.key]!==false;
     sw.classList.toggle('off',!on);
   });
+}
+function escapeHtml(str){
+  return String(str??'').replace(/[&<>"']/g,ch=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  })[ch]);
+}
+function formatSymptomTime(ts){
+  const d=new Date(ts);
+  if(Number.isNaN(d.getTime()))return '';
+  const hm=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const dateKey=d.toISOString().slice(0,10);
+  return dateKey===getTodayISO()?`今日 ${hm}`:`${d.getMonth()+1}月${d.getDate()}日 ${hm}`;
+}
+function normalizeSymptomLog(raw){
+  if(!raw||typeof raw!=='object')return null;
+  const symptoms=Array.isArray(raw.symptoms)
+    ?raw.symptoms.filter(x=>typeof x==='string'&&x.trim()).map(x=>x.trim()).slice(0,6)
+    :[];
+  const level=['轻度','中度','重度'].includes(raw.level)?raw.level:'轻度';
+  const relation=(typeof raw.relation==='string'&&raw.relation.trim())
+    ?raw.relation.trim().slice(0,30)
+    :'与服药时间无明显关系';
+  const note=typeof raw.note==='string'?raw.note.trim().replace(/\s+/g,' ').slice(0,120):'';
+  const ts=(typeof raw.ts==='string'&&!Number.isNaN(new Date(raw.ts).getTime()))?raw.ts:new Date().toISOString();
+  return {symptoms,level,relation,note,ts};
+}
+function renderSymptomRecords(){
+  const listEl=document.getElementById('sym-list');
+  const metaEl=document.getElementById('sym-report-meta');
+  const badgeEl=document.getElementById('sym-report-badge');
+  if(!listEl||!metaEl||!badgeEl)return;
+  const logs=Array.isArray(uiState.symptomLogs)?uiState.symptomLogs:[];
+  if(logs.length===0){
+    listEl.innerHTML='<div class="sym-empty">暂无不适记录</div>';
+    metaEl.textContent='已记录 0 条用药不适';
+    badgeEl.className='rc-badge soon';
+    badgeEl.textContent='待补充';
+    return;
+  }
+  const sorted=[...logs].sort((a,b)=>new Date(b.ts)-new Date(a.ts));
+  listEl.innerHTML=sorted.slice(0,8).map(item=>{
+    const symptomsText=item.symptoms.length?item.symptoms.join('、'):'未填写具体症状';
+    const notePart=item.note?`<br>备注：${escapeHtml(item.note)}`:'';
+    return `<div class="sym-item"><div class="sym-h">${formatSymptomTime(item.ts)} · ${item.level} · ${escapeHtml(symptomsText)}</div><div class="sym-m">与用药关系：${escapeHtml(item.relation)}${notePart}</div></div>`;
+  }).join('');
+  const latest=sorted[0];
+  const latestSym=latest.symptoms.length?latest.symptoms.join('、'):'未填写具体症状';
+  metaEl.textContent=`已记录 ${logs.length} 条，最近：${formatSymptomTime(latest.ts)} · ${latestSym}`;
+  if(latest.level==='重度'){
+    badgeEl.className='rc-badge urgent';
+    badgeEl.textContent='重点关注';
+  }else{
+    badgeEl.className='rc-badge ok';
+    badgeEl.textContent='就绪';
+  }
+}
+function resetSymptomForm(){
+  document.querySelectorAll('#sym-chips .sym-chip').forEach(ch=>ch.classList.remove('on'));
+  const levels=[...document.querySelectorAll('#sym-card .sym-level')];
+  levels.forEach((btn,idx)=>btn.classList.toggle('on',idx===0));
+  const rel=document.getElementById('sym-rel');
+  if(rel)rel.selectedIndex=0;
+  const other=document.getElementById('sym-other');
+  if(other)other.value='';
+  const note=document.getElementById('sym-note');
+  if(note)note.value='';
+}
+function toggleSymptomChip(btn){
+  btn.classList.toggle('on');
+}
+function setSymLevel(btn){
+  document.querySelectorAll('#sym-card .sym-level').forEach(el=>el.classList.remove('on'));
+  btn.classList.add('on');
+}
+function saveSymptom(){
+  const symptoms=[...document.querySelectorAll('#sym-chips .sym-chip.on')].map(x=>x.dataset.s).filter(Boolean);
+  const other=(document.getElementById('sym-other')?.value||'').trim().replace(/\s+/g,' ').slice(0,16);
+  if(other&&!symptoms.includes(other))symptoms.push(other);
+  const level=document.querySelector('#sym-card .sym-level.on')?.dataset.lv||'轻度';
+  const relation=(document.getElementById('sym-rel')?.value||'与服药时间无明显关系').trim();
+  const note=(document.getElementById('sym-note')?.value||'').trim();
+  if(symptoms.length===0&&!note){
+    showToast('⚠ 请至少勾选症状或填写备注');
+    return;
+  }
+  const entry=normalizeSymptomLog({symptoms,level,relation,note,ts:new Date().toISOString()});
+  if(!entry)return;
+  uiState.symptomLogs=[entry,...uiState.symptomLogs].slice(0,SYMPTOM_LOG_LIMIT);
+  saveState();
+  renderSymptomRecords();
+  const logName=entry.symptoms.length?`用药不适：${entry.symptoms.join('、')}`:'用药不适补充记录';
+  addLog(logName,'已记录','var(--amber)','var(--al)','#92400E',entry.level);
+  resetSymptomForm();
+  showToast('✓ 已保存不适记录，复诊时可直接复制汇报摘要');
+}
+function goSymptomLog(){
+  goTab('records',3);
+  setTimeout(()=>{
+    const card=document.getElementById('sym-card');
+    if(!card)return;
+    card.classList.add('guide-target');
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>card.classList.remove('guide-target'),1500);
+  },220);
+}
+async function copyToClipboardText(text){
+  if(navigator.clipboard&&window.isSecureContext){
+    await navigator.clipboard.writeText(text);
+    return true;
+  }
+  const ta=document.createElement('textarea');
+  ta.value=text;
+  ta.setAttribute('readonly','readonly');
+  ta.style.position='fixed';
+  ta.style.left='-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok=false;
+  try{ok=document.execCommand('copy');}catch(e){ok=false;}
+  document.body.removeChild(ta);
+  return ok;
+}
+async function copySymptomSummary(){
+  const logs=Array.isArray(uiState.symptomLogs)?uiState.symptomLogs:[];
+  if(logs.length===0){
+    showToast('📝 还没有不适记录，先去记录一条吧');
+    goSymptomLog();
+    return;
+  }
+  const rows=[...logs].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,8);
+  const now=new Date();
+  const head=`复诊用药不适摘要（${now.getMonth()+1}月${now.getDate()}日 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}）`;
+  const lines=[
+    head,
+    '患者：张先生',
+    `已记录：${logs.length}条（以下为最近${rows.length}条）`,
+    ''
+  ];
+  rows.forEach((item,idx)=>{
+    const sym=item.symptoms.length?item.symptoms.join('、'):'未填写具体症状';
+    const note=item.note?`；备注：${item.note}`:'';
+    lines.push(`${idx+1}. ${formatSymptomTime(item.ts)}｜${item.level}｜${sym}｜${item.relation}${note}`);
+  });
+  try{
+    const ok=await copyToClipboardText(lines.join('\n'));
+    if(!ok)throw new Error('copy failed');
+    showToast('📋 已复制复诊摘要，可粘贴给医生');
+  }catch(e){
+    showToast('⚠ 复制失败，请稍后重试');
+  }
 }
 function clearGuideTarget(){
   document.querySelectorAll('.guide-target').forEach(el=>el.classList.remove('guide-target'));
@@ -1581,6 +1820,7 @@ function renderCarePlanUI(){
   seedCalendarData();
   renderAllDoseRows();
   renderToggles();
+  renderSymptomRecords();
   renderCarePlanUI();
   drawAdhChart('week');
   drawBPChart();
@@ -1687,12 +1927,27 @@ function drawAdhChart(period){
   const mData=[90,80,85,95,70,88,92,60,100,95,85,78,90,80,72,88,95,90,82,100,70,86,90,78,85,88,95,80,75,40].map((v,i)=>({d:`${i+1}日`,v}));
   const data=(period==='month')?mData:wData;
   const el=document.getElementById('adh-chart');
-  const H=58;
-  el.innerHTML=data.map(item=>{
+  const hint=document.getElementById('adh-hint');
+  const H=44;
+  el.classList.toggle('month-scroll',period==='month');
+  el.innerHTML=data.map((item,idx)=>{
     const c=item.v>=80?'#0F9B77':item.v>=60?'#D97706':'#DC2626';
-    const today=item.d==='今日'||item.d==='40日';
-    return `<div class="bw"><div class="bv" style="color:${c}">${item.v}%</div><div class="bbar" style="height:${Math.round(item.v/100*H)}px;background:${c};opacity:${today?1:.55}"></div><div class="bl" style="font-size:${period==='month'?'7px':'8px'}">${period==='month'?'':item.d}</div></div>`;
+    const lc=item.v>=80?'#0B7A62':item.v>=60?'#B45309':'#B91C1C';
+    const today=item.d==='今日'||item.d==='30日';
+    const vText=period==='month'?`${item.v}`:`${item.v}%`;
+    const lText=period==='month'?`${idx+1}`:item.d;
+    return `<div class="bw"><div class="bv" style="color:${lc}">${vText}</div><div class="bbar" style="height:${Math.round(item.v/100*H)}px;background:${c};opacity:${today?1:.55}"></div><div class="bl">${lText}</div></div>`;
   }).join('');
+  if(hint){
+    hint.textContent=period==='month'
+      ?'左右滑动查看30天每日明细（数字为依从率%）'
+      :'';
+  }
+  if(period==='month'){
+    requestAnimationFrame(()=>{el.scrollLeft=el.scrollWidth;});
+  }else{
+    el.scrollLeft=0;
+  }
 }
 
 // ─── SVG Line Chart for BP ───
