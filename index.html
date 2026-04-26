@@ -25,12 +25,14 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .hright{display:flex;align-items:center;gap:7px}
 .hbuy-btn{display:flex;align-items:center;gap:4px;padding:5px 10px;background:var(--mtl);border:1px solid #FFB899;border-radius:20px;font-size:11px;font-weight:500;color:var(--mt);cursor:pointer;transition:all .2s}
 .hbuy-btn:active{opacity:.8}
+.hguide-btn{display:flex;align-items:center;gap:3px;padding:5px 9px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;font-size:11px;font-weight:500;color:var(--blue);cursor:pointer;transition:all .2s}
+.hguide-btn:active{opacity:.8}
 .hav{width:30px;height:30px;border-radius:50%;background:var(--tl);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--teal)}
 .tabs{display:flex}
 .tb{flex:1;padding:8px 0;font-size:10.5px;font-weight:400;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:inherit;white-space:nowrap}
 .tb.on{color:var(--teal);font-weight:600;border-bottom-color:var(--teal)}
 
-.content{padding:12px 12px 84px}
+.content{padding:12px 12px 138px}
 .tc{display:none;animation:fi .2s ease}
 .tc.on{display:block}
 @keyframes fi{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
@@ -53,6 +55,19 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .hst{text-align:center;background:rgba(255,255,255,.11);border-radius:8px;padding:5px 2px}
 .hst-n{font-size:17px;font-weight:700}
 .hst-l{font-size:9px;opacity:.78;margin-top:1px}
+
+/* Quick dose entry */
+.dose-quick{background:linear-gradient(135deg,#065F46,#0F9B77);border-radius:16px;padding:14px 14px 12px;margin-bottom:10px;color:#fff;box-shadow:0 10px 18px rgba(15,155,119,.26)}
+.dq-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.dq-tag{font-size:11px;opacity:.9}
+.dq-time{font-size:24px;font-weight:700;line-height:1}
+.dq-name{font-size:18px;font-weight:700;line-height:1.35}
+.dq-detail{font-size:13px;opacity:.92;margin-top:2px}
+.dq-actions{display:flex;gap:7px;margin-top:10px}
+.dq-btn{flex:1;border:none;border-radius:11px;padding:12px 10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.dq-btn.main{background:#fff;color:#065F46}
+.dq-btn.ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.32)}
+.dq-hint{font-size:11px;opacity:.85;margin-top:7px}
 
 /* Insight row */
 .irow{display:flex;gap:7px;margin-bottom:10px}
@@ -398,6 +413,27 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 /* Toast */
 .toast{position:fixed;top:74px;left:50%;transform:translateX(-50%) translateY(-8px);background:#1A1A2E;color:#fff;padding:8px 16px;border-radius:18px;font-size:11px;z-index:999;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* New user guide */
+.guide-float{position:fixed;left:50%;transform:translateX(-50%);bottom:72px;width:calc(100% - 22px);max-width:408px;background:var(--card);border:1px solid #BFDBFE;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:260;padding:10px}
+.guide-float.hidden{display:none}
+.gf-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.gf-title{font-size:12px;font-weight:700;color:#1E3A8A}
+.gf-prog{font-size:10px;color:#64748B}
+.gf-text{font-size:11px;color:#334155;line-height:1.5;min-height:32px}
+.gf-actions{display:flex;gap:6px;margin-top:8px}
+.gf-btn{flex:1;border:none;border-radius:8px;padding:7px 6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.gf-btn.prev{background:#F3F4F6;color:#334155}
+.gf-btn.next{background:var(--teal);color:#fff}
+.gf-btn.end{background:#fff;border:1px solid var(--border);color:var(--muted)}
+.gf-btn:disabled{opacity:.45;cursor:not-allowed}
+.guide-target{box-shadow:0 0 0 3px rgba(29,111,180,.22),0 0 0 1px rgba(29,111,180,.5) inset;border-radius:10px;transition:box-shadow .2s}
+
+/* Persistent next-step bar */
+.next-step-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:66px;width:calc(100% - 18px);max-width:412px;background:#fff;border:1px solid #D1D5DB;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,.1);z-index:240;padding:8px 9px;display:flex;align-items:center;gap:8px}
+.next-step-bar.hidden{display:none}
+.nsb-text{flex:1;font-size:12px;color:#334155;line-height:1.35}
+.nsb-btn{border:none;border-radius:9px;background:var(--teal);color:#fff;padding:10px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -407,6 +443,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="htop">
     <div class="htitle">💊 慢病用药小管家</div>
     <div class="hright">
+      <div class="hguide-btn" onclick="openGuide(true)">🧭 新手</div>
       <div class="hbuy-btn" onclick="openBuyModal(null)">🛒 美团买药</div>
       <div class="hav">张</div>
     </div>
@@ -431,6 +468,20 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
         <div class="hst"><div class="hst-n" id="cnt-streak">12</div><div class="hst-l">连续天</div></div>
       </div>
     </div>
+  </div>
+
+  <div class="dose-quick" id="dose-quick">
+    <div class="dq-top">
+      <div class="dq-tag">下一次用药</div>
+      <div class="dq-time" id="dq-time">07:30</div>
+    </div>
+    <div class="dq-name" id="dq-name">二甲双胍片</div>
+    <div class="dq-detail" id="dq-detail">500mg · 1片 · 早餐后</div>
+    <div class="dq-actions">
+      <button class="dq-btn main" id="dq-main-btn" onclick="quickDoseAction()">立即打卡</button>
+      <button class="dq-btn ghost" onclick="scrollDoseList()">查看全部药品</button>
+    </div>
+    <div class="dq-hint" id="dq-hint">长按不需要，点一次即可完成打卡</div>
   </div>
 
   <div class="focus-card">
@@ -519,7 +570,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   </div>
 
   <!-- 用药时间轴 — 双按钮（✓已服 / ✗漏服） -->
-  <div class="tslot">
+  <div class="tslot" id="dose-list-start">
     <div class="sh"><div class="stag am">🌅 早餐后</div><div class="stime">07:30</div></div>
     <div class="mrow" id="mr-m1">
       <div class="mic" style="background:#FEF9C3">💊</div>
@@ -999,7 +1050,24 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <button class="nb" onclick="goTab('ai',4)"><div class="ni"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="8"/><path d="M8 10h.01M11 10h.01M14 10h.01"/><path d="M8 14s1 1.5 3 1.5 3-1.5 3-1.5"/></svg></div><div class="nlbl">AI助手</div></button>
 </div>
 
+<div class="next-step-bar" id="next-step-bar">
+  <div class="nsb-text" id="next-step-text">下一步：去完成用药打卡</div>
+  <button class="nsb-btn" id="next-step-btn" onclick="followNextStep()">去处理</button>
+</div>
+
 <div class="toast" id="toast"></div>
+<div class="guide-float hidden" id="guide-float">
+  <div class="gf-head">
+    <div class="gf-title">新手使用顺序</div>
+    <div class="gf-prog" id="guide-prog">1/4</div>
+  </div>
+  <div class="gf-text" id="guide-text">先完成今日用药打卡，建立当日进度。</div>
+  <div class="gf-actions">
+    <button class="gf-btn prev" id="guide-prev-btn" onclick="prevGuideStep()">上一步</button>
+    <button class="gf-btn next" id="guide-next-btn" onclick="nextGuideStep()">下一步并跳转</button>
+    <button class="gf-btn end" onclick="closeGuide(true)">关闭</button>
+  </div>
+</div>
 
 <script>
 // ─── Config ───
@@ -1053,14 +1121,29 @@ const DEFAULT_TOGGLES={
   buy_shortcut:true
 };
 const DEFAULT_LAST_ORDERS={'格列美脲片':'2026-04-18','阿托伐他汀钙片':'2026-04-12'};
-let uiState={toggles:{...DEFAULT_TOGGLES},lastOrders:{...DEFAULT_LAST_ORDERS},healthLoggedDate:''};
+const GUIDE_STEPS=[
+  {tab:'today',idx:0,target:'task-dose-item',text:'第1步：先在“今日”完成用药打卡，确认今天不漏服。'},
+  {tab:'records',idx:3,target:'bp-s',text:'第2步：到“记录”录入血压/血糖，形成复诊依据。',focus:true},
+  {tab:'remind',idx:2,target:'renew-main-btn',text:'第3步：到“提醒”按建议一步处理续方购药。'},
+  {tab:'ai',idx:4,target:'cinp',text:'第4步：到“AI助手”输入问题，获取用药解释与提醒。',focus:true}
+];
+let uiState={toggles:{...DEFAULT_TOGGLES},lastOrders:{...DEFAULT_LAST_ORDERS},healthLoggedDate:'',guideStep:0,guideCompleted:false};
 let latestTopRisk={name:'格列美脲片',days:7};
 let nextStepAction='dose';
 const MED_PLAN_ORDER=['m1','m2','m3','m4','m5'];
 const MED_PLAN_TIME={m1:'07:30',m2:'07:30',m3:'12:00',m4:'18:30',m5:'18:30'};
+const MED_PLAN_META={
+  m1:{name:'二甲双胍片',detail:'500mg · 1片 · 早餐后'},
+  m2:{name:'苯磺酸氨氯地平',detail:'5mg · 1片 · 早餐后'},
+  m3:{name:'二甲双胍片',detail:'500mg · 1片 · 午餐后'},
+  m4:{name:'格列美脲片',detail:'1mg · 1片 · 晚餐前'},
+  m5:{name:'阿托伐他汀钙片',detail:'20mg · 1片 · 晚餐后'}
+};
 const calData={}; // key: YYYY-MM-DD, val: 'ok'|'miss'|'partial'
 let calYear, calMonth;
 let calSelectedKey='';
+let guideOpen=false;
+let quickDoseTargetId='';
 
 function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
 function daysUntil(dateLike){
@@ -1107,6 +1190,8 @@ function saveState(){
     toggles:uiState.toggles,
     lastOrders:uiState.lastOrders,
     healthLoggedDate:uiState.healthLoggedDate,
+    guideStep:uiState.guideStep,
+    guideCompleted:uiState.guideCompleted,
     calData,
     chatHistory
   }));
@@ -1124,6 +1209,8 @@ function loadState(){
     uiState.toggles={...DEFAULT_TOGGLES,...(saved?.toggles||{})};
     uiState.lastOrders={...DEFAULT_LAST_ORDERS,...(saved?.lastOrders||{})};
     uiState.healthLoggedDate=saved?.healthLoggedDate||'';
+    uiState.guideStep=Math.min(Math.max(saved?.guideStep??0,0),GUIDE_STEPS.length-1);
+    uiState.guideCompleted=!!saved?.guideCompleted;
     if(saved?.calData&&typeof saved.calData==='object'){
       Object.keys(saved.calData).forEach(k=>{
         if(['ok','miss','partial'].includes(saved.calData[k]))calData[k]=saved.calData[k];
@@ -1157,6 +1244,77 @@ function renderToggles(){
     const on=uiState.toggles[sw.dataset.key]!==false;
     sw.classList.toggle('off',!on);
   });
+}
+function clearGuideTarget(){
+  document.querySelectorAll('.guide-target').forEach(el=>el.classList.remove('guide-target'));
+}
+function renderGuideBar(){
+  const panel=document.getElementById('guide-float');
+  if(!panel)return;
+  panel.classList.toggle('hidden',!guideOpen);
+  updateNextStepBar();
+  if(!guideOpen)return;
+  const idx=Math.min(Math.max(uiState.guideStep,0),GUIDE_STEPS.length-1);
+  const step=GUIDE_STEPS[idx];
+  document.getElementById('guide-prog').textContent=`${idx+1}/${GUIDE_STEPS.length}`;
+  document.getElementById('guide-text').textContent=step.text;
+  const prevBtn=document.getElementById('guide-prev-btn');
+  const nextBtn=document.getElementById('guide-next-btn');
+  prevBtn.disabled=idx===0;
+  nextBtn.textContent=idx===GUIDE_STEPS.length-1?'完成引导':'下一步并跳转';
+}
+function applyGuideStep(shouldJump){
+  const idx=Math.min(Math.max(uiState.guideStep,0),GUIDE_STEPS.length-1);
+  const step=GUIDE_STEPS[idx];
+  if(shouldJump){
+    goTab(step.tab,step.idx);
+  }
+  setTimeout(()=>{
+    clearGuideTarget();
+    const el=document.getElementById(step.target);
+    if(!el)return;
+    el.classList.add('guide-target');
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    if(step.focus&&typeof el.focus==='function')el.focus();
+  },260);
+  renderGuideBar();
+}
+function openGuide(reset){
+  if(reset){
+    uiState.guideStep=0;
+    uiState.guideCompleted=false;
+  }
+  guideOpen=true;
+  saveState();
+  renderGuideBar();
+  applyGuideStep(true);
+}
+function closeGuide(markCompleted){
+  guideOpen=false;
+  clearGuideTarget();
+  if(markCompleted){
+    uiState.guideCompleted=true;
+    saveState();
+  }else{
+    saveState();
+  }
+  renderGuideBar();
+}
+function nextGuideStep(){
+  if(uiState.guideStep>=GUIDE_STEPS.length-1){
+    closeGuide(true);
+    showToast('🎉 新手引导已完成');
+    return;
+  }
+  uiState.guideStep++;
+  saveState();
+  applyGuideStep(true);
+}
+function prevGuideStep(){
+  if(uiState.guideStep<=0)return;
+  uiState.guideStep--;
+  saveState();
+  applyGuideStep(true);
 }
 function setTaskState(id,state,title,subtitle){
   const card=document.getElementById(id+'-item');
@@ -1228,11 +1386,96 @@ function renderTodayFocus(){
     nextStepAction='review';
     mainBtn.textContent='去查看本周记录';
   }
+  renderQuickDoseCard();
+  updateNextStepBar();
+}
+function getNextPendingMedId(){
+  return MED_PLAN_ORDER.find(id=>medState[id]===null)||'';
+}
+function focusDoseRow(id){
+  if(!id)return;
+  goTab('today',0);
+  setTimeout(()=>{
+    const row=document.getElementById('mr-'+id);
+    if(!row)return;
+    row.classList.add('guide-target');
+    row.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>row.classList.remove('guide-target'),1500);
+  },220);
+}
+function renderQuickDoseCard(){
+  const nextId=getNextPendingMedId();
+  const dqTime=document.getElementById('dq-time');
+  const dqName=document.getElementById('dq-name');
+  const dqDetail=document.getElementById('dq-detail');
+  const dqBtn=document.getElementById('dq-main-btn');
+  const dqHint=document.getElementById('dq-hint');
+  if(!dqTime||!dqName||!dqDetail||!dqBtn||!dqHint)return;
+  quickDoseTargetId=nextId;
+  if(!nextId){
+    dqTime.textContent='已完成';
+    dqName.textContent='今日用药全部打卡完成';
+    dqDetail.textContent='可以去记录页录入血压和血糖';
+    dqBtn.textContent='查看今日记录';
+    dqHint.textContent='你今天的用药任务已结束，做得很棒';
+    return;
+  }
+  const meta=MED_PLAN_META[nextId];
+  dqTime.textContent=MED_PLAN_TIME[nextId];
+  dqName.textContent=meta.name;
+  dqDetail.textContent=meta.detail;
+  dqBtn.textContent='立即打卡';
+  const pending=Math.max(0,TOTAL-taken-missedCount);
+  dqHint.textContent=pending>=3?'先完成这一步，系统会自动指引下一步':'再完成这次打卡，今天任务就更接近完成';
+}
+function quickDoseAction(){
+  if(!quickDoseTargetId){
+    goTab('records',3);
+    showToast('✅ 今日用药已完成，去看看记录吧');
+    return;
+  }
+  const target=quickDoseTargetId;
+  markTaken(target);
+  focusDoseRow(target);
+}
+function scrollDoseList(){
+  const target=document.getElementById('dose-list-start');
+  if(!target)return;
+  target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function updateNextStepBar(){
+  const bar=document.getElementById('next-step-bar');
+  const txt=document.getElementById('next-step-text');
+  const btn=document.getElementById('next-step-btn');
+  if(!bar||!txt||!btn)return;
+  if(guideOpen){
+    bar.classList.add('hidden');
+    return;
+  }
+  bar.classList.toggle('hidden',false);
+  if(nextStepAction==='dose'){
+    txt.textContent='下一步：去完成下一次用药打卡';
+    btn.textContent='去打卡';
+  }else if(nextStepAction==='health'){
+    txt.textContent='下一步：录入今日血压/血糖';
+    btn.textContent='去录入';
+  }else if(nextStepAction==='renew'){
+    txt.textContent=`下一步：处理${latestTopRisk.name}续方购药`;
+    btn.textContent='去处理';
+  }else{
+    txt.textContent='下一步：查看本周记录与趋势';
+    btn.textContent='去查看';
+  }
 }
 function followNextStep(){
   if(nextStepAction==='dose'){
-    goTab('today',0);
-    showToast('💊 请先完成下一次待服药打卡');
+    const nextId=getNextPendingMedId();
+    if(nextId){
+      focusDoseRow(nextId);
+      showToast('💊 已定位到下一次待服药，请直接打卡');
+    }else{
+      showToast('✅ 今日用药已全部完成');
+    }
     return;
   }
   if(nextStepAction==='health'){
@@ -1343,6 +1586,11 @@ function renderCarePlanUI(){
   drawBPChart();
   drawCalendar();
   updateProg();
+  if(!uiState.guideCompleted){
+    openGuide(false);
+  }else{
+    renderGuideBar();
+  }
 })();
 
 // ─── Tab ───
@@ -1352,6 +1600,10 @@ function goTab(id,idx){
   document.querySelectorAll('.tb').forEach((b,i)=>b.classList.toggle('on',i===idx));
   document.querySelectorAll('.bnav .nb').forEach((b,i)=>b.classList.toggle('on',i===idx));
   document.getElementById('fab').style.display=(id==='meds')?'flex':'none';
+  if(guideOpen){
+    setTimeout(()=>applyGuideStep(false),160);
+  }
+  updateNextStepBar();
 }
 
 // ─── Med actions — FIXED dual-button logic ───
